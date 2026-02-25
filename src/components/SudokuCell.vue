@@ -1,30 +1,45 @@
 <template>
   <div 
-    class="relative w-12 h-12 sm:w-14 sm:h-14 bg-white flex items-center justify-center border-[0.5px] border-slate-200"
-    :class="{ 
-      'border-r-4 border-r-slate-800': isBoldRight,
-      'border-b-4 border-b-slate-800': isBoldBottom
-    }"
+    class="flex items-center justify-center text-3xl font-semibold cursor-pointer 
+           transition-all select-none relative
+           border border-blue-900/40"
+    :class="[
+
+      // ===== Base background =====
+      isInitial
+        ? 'bg-[#050c1a] text-slate-400'   // số đề bài
+        : 'bg-[#030a17] text-cyan-300',   // số người chơi
+
+      // ===== Selected cell =====
+      isSelected
+        ? 'bg-blue-500/15 ring-1 ring-blue-400/60 shadow-[0_0_10px_rgba(59,130,246,0.25)] z-10'
+        : '',
+
+      // ===== Error state =====
+      isError
+        ? 'bg-red-900/30 text-red-400 shadow-[inset_0_0_8px_rgba(239,68,68,0.35)]'
+        : '',
+
+      // ===== 3x3 borders =====
+      borderClasses
+    ]"
   >
-    <input 
-      :value="modelValue === 0 ? '' : modelValue"
-      @input="$emit('update:modelValue', Number($event.target.value))"
-      type="number"
-      class="w-full h-full text-center text-xl font-bold focus:bg-emerald-50 outline-none transition-colors text-slate-700"
-      @focus="$event.target.select()"
-    />
+    {{ value !== 0 ? value : '' }}
+
+    <!-- overlay highlight nhẹ -->
+    <div 
+      v-if="isSelected"
+      class="absolute inset-0 bg-blue-400/5 pointer-events-none"
+    ></div>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  modelValue: Number,
-  isBoldRight: Boolean,
-  isBoldBottom: Boolean
+  value: Number,
+  isInitial: Boolean,
+  isSelected: Boolean,
+  isError: Boolean,
+  borderClasses: String
 });
-defineEmits(['update:modelValue']);
 </script>
-
-<style scoped>
-input::-webkit-inner-spin-button { display: none; }
-</style>

@@ -29,9 +29,9 @@ export function generateGame(difficulty = 'easy'){
 
     //Xóa ô dựa trên độ khó
     let removedCells;
-    if(difficulty = "easy") removedCells = 35;
-    else if(difficulty = "medium") removedCells = 45;
-    else removedCells = 55;
+    if(difficulty = "easy") removedCells = 55;
+    else if(difficulty = "medium") removedCells = 75;
+    else removedCells = 85;
     
     while(removedCells > 0){
         let r = Math.floor(Math.random() * 9);

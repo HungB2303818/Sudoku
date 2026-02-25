@@ -1,53 +1,151 @@
 <template>
-  <div class="flex flex-col items-center gap-8 p-6 bg-slate-50 rounded-2xl shadow-inner">
-    <div class="bg-slate-900 p-1.5 shadow-2xl rounded-xl overflow-hidden border-4 border-slate-900">
-      <div v-for="(row, rIdx) in board" :key="rIdx" class="flex">
-        <SudokuCell 
-          v-for="(cell, cIdx) in row" 
-          :key="cIdx"
-          v-model="board[rIdx][cIdx]"
-          :isBoldRight="(cIdx + 1) % 3 === 0 && cIdx !== 8"
-          :isBoldBottom="(rIdx + 1) % 3 === 0 && rIdx !== 8"
+  <div class="flex flex-col items-center justify-center">
+    <div
+      class="grid grid-cols-9 grid-rows-9 bg-[#0f172a] border-[1px] border-blue-900/40 shadow-[0_0_50px_rgba(0,0,0,0.6)] overflow-hidden rounded-md"
+      :style="{ width: 'min(70vh, 70vw)', height: 'min(70vh, 70vw)' }"
+    >
+      <template v-for="(row, r) in modelValue" :key="r">
+        <SudokuCell
+          v-for="(cell, c) in row"
+          :key="c"
+          :value="cell"
+          :is-initial="initialGrid[r][c] !== 0"
+          :is-selected="selected.r === r && selected.c === c"
+          :is-error="errors[r][c]"
+          :border-classes="getBorderClasses(r, c)"
+          @click="selectCell(r, c)"
+          class="w-full h-full"
         />
-      </div>
-    </div>
-
-    <div class="flex gap-4">
-      <button 
-        @click="handleSolve" 
-        class="flex items-center gap-2 bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-200"
-      >
-        <span>🪄</span> Giải tự động
-      </button>
-      
-      <button 
-        @click="clear" 
-        class="flex items-center gap-2 bg-white text-slate-600 px-8 py-3 rounded-xl font-bold border-2 border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
-      >
-        <span>🗑️</span> Xóa bảng
-      </button>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import SudokuCell from './SudokuCell.vue';
-import { useSudoku } from '../composables/useSudoku';
+import { ref, watch, onMounted, onUnmounted } from 'vue'
+import SudokuCell from './SudokuCell.vue'
+import { isValid } from '../logic/validator'
 
-const { board, solve } = useSudoku();
-
-const handleSolve = () => {
-  // Tạo bản sao sâu để thực hiện thuật toán đệ quy
-  const gridCopy = JSON.parse(JSON.stringify(board.value));
-  if (solve(gridCopy)) {
-    board.value = gridCopy;
-  } else {
-    alert("Không tìm thấy lời giải cho bảng hiện tại!");
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    required: true
+  },
+  initialGrid: {
+    type: Array,
+    required: true
   }
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const selected = ref({ r: -1, c: -1 })
+
+const errors = ref(
+  Array.from({ length: 9 }, () => Array(9).fill(false))
+)
+
+
+// =======================
+// Border logic 3x3 blocks
+// =======================
+const getBorderClasses = (r, c) => {
+  // Đường kẻ mặc định cực mảnh và mờ
+  let classes = 'border-[0.5px] border-cyan-900/20'; 
+  
+  // Đường kẻ phân chia khối 3x3 (Sáng hơn một chút để phân biệt nhưng không dày)
+  if ((r + 1) % 3 === 0 && r < 8) classes += ' border-b-[1.5px] border-b-cyan-800/40';
+  if ((c + 1) % 3 === 0 && c < 8) classes += ' border-r-[1.5px] border-r-cyan-800/40';
+  
+  return classes;
 };
 
-const clear = () => {
-  // Reset bảng về trạng thái trống
-  board.value = Array(9).fill().map(() => Array(9).fill(0));
-};
+
+// =======================
+// Selection
+// =======================
+const selectCell = (r, c) => {
+  selected.value = { r, c }
+}
+
+
+// =======================
+// Validate board safely
+// =======================
+const validateBoard = () => {
+  const newErrors = Array.from(
+    { length: 9 },
+    () => Array(9).fill(false)
+  )
+
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      const num = props.modelValue[r][c]
+
+      if (num !== 0) {
+        // clone grid để tránh mutate props
+        const tempGrid = props.modelValue.map(row => [...row])
+        tempGrid[r][c] = 0
+
+        if (!isValid(tempGrid, r, c, num)) {
+          newErrors[r][c] = true
+        }
+      }
+    }
+  }
+
+  errors.value = newErrors
+}
+
+
+// =======================
+// Update cell
+// =======================
+const updateCell = (r, c, value) => {
+  const newGrid = props.modelValue.map(row => [...row])
+  newGrid[r][c] = value
+
+  emit('update:modelValue', newGrid)
+}
+
+
+// =======================
+// Keyboard input
+// =======================
+const handleKeyDown = (e) => {
+  const { r, c } = selected.value
+
+  if (r === -1 || c === -1) return
+
+  // Không cho sửa ô đề
+  if (props.initialGrid[r][c] !== 0) return
+
+  if (/^[1-9]$/.test(e.key)) {
+    updateCell(r, c, parseInt(e.key))
+  }
+
+  if (e.key === 'Backspace' || e.key === 'Delete') {
+    updateCell(r, c, 0)
+  }
+}
+
+// Watch grid changes
+watch(
+  () => props.modelValue,
+  () => validateBoard(),
+  { deep: true }
+)
+
+
+// =======================
+// Lifecycle
+// =======================
+onMounted(() => {
+  validateBoard()
+  window.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
 </script>
