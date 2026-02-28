@@ -1,36 +1,45 @@
-// Thay đổi từ @tauri-apps/api sang các plugin tương ứng
-import { save, open } from '@tauri-apps/plugin-dialog';
-import { writeTextFile, readTextFile } from '@tauri-apps/plugin-fs';
+import { writeTextFile, readTextFile, exists, BaseDirectory } 
+  from '@tauri-apps/plugin-fs'
 
+const SAVE_FILE = "sudoku-save.json"
+
+/**
+ * Lưu trạng thái game
+ */
 export async function saveGameToFile(gameState) {
   try {
-    const filePath = await save({
-      filters: [{ name: 'Sudoku Game', extensions: ['json'] }]
-    });
-    
-    if (filePath) {
-      await writeTextFile(filePath, JSON.stringify(gameState));
-      return true;
-    }
+    await writeTextFile(
+      SAVE_FILE,
+      JSON.stringify(gameState, null, 2),
+      { baseDir: BaseDirectory.AppData }
+    )
+    return true
   } catch (error) {
-    console.error("Lỗi lưu file:", error);
-    return false;
+    console.error("Lỗi khi lưu game:", error)
+    return false
   }
 }
 
+/**
+ * Load trạng thái game
+ */
 export async function loadGameFromFile() {
   try {
-    const selectedPath = await open({
-      multiple: false,
-      filters: [{ name: 'Sudoku Game', extensions: ['json'] }]
-    });
+    const fileExists = await exists(
+      SAVE_FILE,
+      { baseDir: BaseDirectory.AppData }
+    )
 
-    if (selectedPath) {
-      const content = await readTextFile(selectedPath);
-      return JSON.parse(content);
-    }
+    if (!fileExists) return null
+
+    const content = await readTextFile(
+      SAVE_FILE,
+      { baseDir: BaseDirectory.AppData }
+    )
+
+    return JSON.parse(content)
   } catch (error) {
-    console.error("Lỗi đọc file:", error);
-    return null;
+    console.error("Lỗi khi load game:", error)
+    return null
   }
 }

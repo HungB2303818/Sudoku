@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="flex items-center justify-center text-3xl font-semibold cursor-pointer 
+    class="flex items-center justify-center text-2xl  cursor-pointer 
            transition-all select-none relative
            border border-blue-900/40"
     :class="[

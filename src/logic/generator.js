@@ -1,52 +1,101 @@
-import { isValid } from "./validator";
+import { isValid } from "./validator"
 
-function fillRandom(board){
-    for(let row=0;row<9;row++){
-        for(let col=0; col < 9; col++){
-            if(board[row][col] === 0){
-                let nums=[1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
-                for(let num of nums){
-                    if(isValid(board, row, col, num)){
-                        board[row][col]=num;
-                        if(fillRandom(board)) return true;
-                        board[row][col] = 0;
-                    }
-                }
-                return false;
-            }
-        }
-    }
-    return true;
+/**
+ * Tạo ma trận 9x9 rỗng
+ */
+function createEmptyBoard() {
+  return Array.from({ length: 9 }, () => Array(9).fill(0))
 }
 
-export function generateGame(difficulty = 'easy'){
-    //Tạo bảng đáp án
-    let solutionBoard = Array.from({length: 9}, () => Array(9).fill(0));
-    fillRandom(solutionBoard);
+/**
+ * Shuffle mảng (Fisher-Yates chuẩn)
+ */
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
+  }
+  return array
+}
 
-    //Tạo bảng chơi
-    let puzzleBoard = solutionBoard.map(row => [...row]);
+/**
+ * Sinh full board hợp lệ bằng backtracking
+ */
+function fillBoard(board) {
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      if (board[row][col] === 0) {
+        const numbers = shuffle([1,2,3,4,5,6,7,8,9])
 
-    //Xóa ô dựa trên độ khó
-    let removedCells;
-    if(difficulty = "easy") removedCells = 55;
-    else if(difficulty = "medium") removedCells = 75;
-    else removedCells = 85;
-    
-    while(removedCells > 0){
-        let r = Math.floor(Math.random() * 9);
-        let c = Math.floor(Math.random() * 9);
-        if (puzzleBoard[r][c] != 0){
-            puzzleBoard[r][c] = 0;
-            removedCells--;
+        for (let num of numbers) {
+          if (isValid(board, row, col, num)) {
+            board[row][col] = num
+
+            if (fillBoard(board)) return true
+
+            board[row][col] = 0
+          }
         }
+
+        return false
+      }
     }
-    //Trả về cấu trúc dữ liệu
-    return {
-        initialBoard: puzzleBoard.map(row => [...row]), //Bảng gốc
-        currentBoard: puzzleBoard.map(row => [...row]), //Trạng thái hiện tại
-        solution: solutionBoard,                        // Đáp án
-        difficulty: difficulty,
-        createAt: new Date().toISOString()
-    };
+  }
+  return true
+}
+
+/**
+ * Số ô bị xóa theo độ khó
+ */
+function getRemovedCells(difficulty) {
+  const levels = {
+    easy: 35,
+    medium: 45,
+    hard: 55
+  }
+
+  return levels[difficulty] ?? levels.easy
+}
+
+/**
+ * Xóa ô khỏi board
+ */
+function removeCells(board, difficulty) {
+  let removed = getRemovedCells(difficulty)
+
+  while (removed > 0) {
+    const r = Math.floor(Math.random() * 9)
+    const c = Math.floor(Math.random() * 9)
+
+    if (board[r][c] !== 0) {
+      board[r][c] = 0
+      removed--
+    }
+  }
+
+  return board
+}
+
+/**
+ * Hàm public export
+ */
+export function generateGame(difficulty = "easy") {
+  // 1. Tạo đáp án đầy đủ
+  const solutionBoard = createEmptyBoard()
+  fillBoard(solutionBoard)
+
+  // 2. Tạo puzzle từ solution
+  const puzzleBoard = solutionBoard.map(row => [...row])
+  removeCells(puzzleBoard, difficulty)
+
+  // 3. Trả về cấu trúc chuẩn
+  return {
+    meta: {
+      difficulty,
+      createdAt: Date.now()
+    },
+    initialBoard: puzzleBoard.map(row => [...row]),
+    currentBoard: puzzleBoard.map(row => [...row]),
+    solutionBoard: solutionBoard.map(row => [...row])
+  }
 }

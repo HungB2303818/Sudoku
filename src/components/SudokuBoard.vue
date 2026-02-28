@@ -54,8 +54,8 @@ const getBorderClasses = (r, c) => {
   let classes = 'border-[0.5px] border-cyan-900/20'; 
   
   // Đường kẻ phân chia khối 3x3 (Sáng hơn một chút để phân biệt nhưng không dày)
-  if ((r + 1) % 3 === 0 && r < 8) classes += ' border-b-[1.5px] border-b-cyan-800/40';
-  if ((c + 1) % 3 === 0 && c < 8) classes += ' border-r-[1.5px] border-r-cyan-800/40';
+  if ((r + 1) % 3 === 0 && r < 8) classes += ' border-b-[2px] border-b-cyan-800/40';
+  if ((c + 1) % 3 === 0 && c < 8) classes += ' border-r-[2px] border-r-cyan-800/40';
   
   return classes;
 };
