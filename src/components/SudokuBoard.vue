@@ -106,7 +106,7 @@ const updateCell = (r, c, value) => {
 // Keyboard input (store pinia)
 const handleKeyDown = (e) => {
   const r = store.selectedRow
-  const c = store.selectedCol
+const c = store.selectedCol
 
   if (r === null || c === null) return
   if (props.initialGrid[r][c] !== 0) return

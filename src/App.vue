@@ -4,7 +4,9 @@
   </div>
 </template>
 <style>
-html, body, #app {
+html,
+body,
+#app {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -15,12 +17,7 @@ html, body, #app {
 .app-root {
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    to bottom right,
-    #020617,
-    #0f172a,
-    #020617
-  );
+  background: linear-gradient(to bottom right, #020617, #0f172a, #020617);
   color: white;
   font-family: sans-serif;
 }

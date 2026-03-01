@@ -1,21 +1,22 @@
-import { defineStore } from 'pinia'
-import { generateGame } from '../logic/generator'
-import { solveSudoku } from '../logic/solver'
-import { isValid } from '../logic/validator'
+import { defineStore } from "pinia";
+import { generateGame } from "../logic/generator";
+import { solveSudoku } from "../logic/solver";
+import { isValid } from "../logic/validator";
 
 function createEmptyBoard() {
-  return Array.from({ length: 9 }, () => Array(9).fill(0))
+  return Array.from({ length: 9 }, () => Array(9).fill(0));
 }
 
-export const useGameStore = defineStore('game', {
+export const useGameStore = defineStore("game", {
   state: () => ({
     gameGrid: createEmptyBoard(),
     initialGrid: createEmptyBoard(),
     solution: createEmptyBoard(),
 
-    difficulty: '',
+    difficulty: "",
     createdAt: null,
 
+    //BOARD STATE
     isStarted: false,
     isCompleted: false,
     isValidBoard: true,
@@ -23,99 +24,114 @@ export const useGameStore = defineStore('game', {
     selectedRow: null,
     selectedCol: null,
 
+    //FOR UNDO
     history: [],
-    redoStack: []
+    redoStack: [],
+
+    //TIMER
+    elapsedSeconds: 0,
+    timerId: null,
+    startTimeStamp: null,
+    isRunning: false,
   }),
 
   getters: {
-  hasSavedGame: (state) => {
-    return state.gameGrid.flat().some(v => v !== 0)
-  }
-},
-  actions: {
+    hasSavedGame: (state) => {
+      return state.gameGrid.flat().some((v) => v !== 0);
+    },
 
+    formattedTime(state) {
+      const m = Math.floor(state.elapsedSeconds / 60);
+      const s = state.elapsedSeconds % 60;
+      return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+    },
+  },
+  actions: {
     //UI
     selectCell(row, col) {
-      if (this.initialGrid[row][col] !== 0) return
-      this.selectedRow = row
-      this.selectedCol = col
+      if (this.initialGrid[row][col] !== 0) return;
+      this.selectedRow = row;
+      this.selectedCol = col;
     },
 
     clearSelection() {
-      this.selectedRow = null
-      this.selectedCol = null
+      this.selectedRow = null;
+      this.selectedCol = null;
     },
     /**
      * Bắt đầu game mới
      */
     startNewGame(level) {
-      const game = generateGame(level)
+      this.stopTimer();
 
-      this.gameGrid = game.currentBoard
-      this.initialGrid = game.initialBoard
-      this.solution = game.solutionBoard
+      const game = generateGame(level);
 
-      this.difficulty = game.meta.difficulty
-      this.createdAt = game.meta.createdAt
+      this.gameGrid = game.currentBoard;
+      this.initialGrid = game.initialBoard;
+      this.solution = game.solutionBoard;
 
-      this.isStarted = true
-      this.isCompleted = false
-      this.isValidBoard = true
+      this.difficulty = game.meta.difficulty;
+      this.createdAt = game.meta.createdAt;
 
-      this.history = []
-      this.redoStack = []
+      this.isStarted = true;
+      this.isCompleted = false;
+      this.isValidBoard = true;
 
-      this.clearSelection()
+      this.history = [];
+      this.redoStack = [];
+
+      this.elapsedSeconds = 0;
+      this.startTimeStamp = null;
+
+      this.startTimer();
+
+      this.clearSelection();
     },
 
     /**
      * Cập nhật 1 ô
      */
     updateCell(row, col, value) {
-  // Không cho sửa ô gốc
-  if (this.initialGrid[row][col] !== 0) return
+      // Không cho sửa ô gốc
+      if (this.initialGrid[row][col] !== 0) return;
 
-  const oldValue = this.gameGrid[row][col]
+      const oldValue = this.gameGrid[row][col];
 
-  // Không lưu nếu không thay đổi
-  if (oldValue === value) return
+      // Không lưu nếu không thay đổi
+      if (oldValue === value) return;
 
-  // Lưu history
-  this.history.push({
-    row,
-    col,
-    prevValue: oldValue,
-    newValue: value
-  })
+      // Lưu history
+      this.history.push({
+        row,
+        col,
+        prevValue: oldValue,
+        newValue: value,
+      });
 
-  // Clear redo nếu có thao tác mới
-  this.redoStack = []
+      // Clear redo nếu có thao tác mới
+      this.redoStack = [];
 
-  this.gameGrid[row][col] = value
+      this.gameGrid[row][col] = value;
 
-  this.isValidBoard = this.validateCurrentBoard()
-  this.checkCompletion()
-},
+      this.isValidBoard = this.validateCurrentBoard();
+      this.checkCompletion();
+    },
 
     inputNumber(value) {
-      if (this.selectedRow === null) return
+      if (this.selectedRow === null) return;
 
-      this.updateCell(
-        this.selectedRow,
-        this.selectedCol,
-        value
-      )
+      this.updateCell(this.selectedRow, this.selectedCol, value);
     },
     /**
      * Giải tự động
      */
     autoSolve() {
-      const boardCopy = JSON.parse(JSON.stringify(this.gameGrid))
+      const boardCopy = JSON.parse(JSON.stringify(this.gameGrid));
 
       if (solveSudoku(boardCopy)) {
-        this.gameGrid = boardCopy
-        this.isCompleted = true
-        this.isValidBoard = true
+        this.gameGrid = boardCopy;
+        this.isCompleted = true;
+        this.isValidBoard = true;
       }
     },
 
@@ -125,16 +141,16 @@ export const useGameStore = defineStore('game', {
     validateCurrentBoard() {
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
-          const value = this.gameGrid[r][c]
+          const value = this.gameGrid[r][c];
           if (value !== 0) {
-            this.gameGrid[r][c] = 0
-            const valid = isValid(this.gameGrid, r, c, value)
-            this.gameGrid[r][c] = value
-            if (!valid) return false
+            this.gameGrid[r][c] = 0;
+            const valid = isValid(this.gameGrid, r, c, value);
+            this.gameGrid[r][c] = value;
+            if (!valid) return false;
           }
         }
       }
-      return true
+      return true;
     },
 
     /**
@@ -143,12 +159,13 @@ export const useGameStore = defineStore('game', {
     checkCompletion() {
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
-          if (this.gameGrid[r][c] === 0) return
+          if (this.gameGrid[r][c] === 0) return;
         }
       }
 
       if (this.validateCurrentBoard()) {
-        this.isCompleted = true
+        this.isCompleted = true;
+        this.isCompleted = true;
       }
     },
 
@@ -162,60 +179,95 @@ export const useGameStore = defineStore('game', {
         solution: data.solution,
         difficulty: data.difficulty,
         createdAt: data.createdAt,
-        isStarted: true
-      })
+        isStarted: true,
+      });
     },
 
     undo() {
-  if (this.history.length === 0) return
+      if (this.history.length === 0) return;
 
-  const lastMove = this.history.pop()
+      const lastMove = this.history.pop();
 
-  this.gameGrid[lastMove.row][lastMove.col] = lastMove.prevValue
+      this.gameGrid[lastMove.row][lastMove.col] = lastMove.prevValue;
 
-  this.redoStack.push(lastMove)
+      this.redoStack.push(lastMove);
 
-  this.isValidBoard = this.validateCurrentBoard()
-  this.isCompleted = false
-},
+      this.isValidBoard = this.validateCurrentBoard();
+      this.isCompleted = false;
+    },
+
+    //TIMER
+    startTimer() {
+      if (this.isRunning) return;
+
+      this.isRunning = true;
+      this.startTimeStamp = Date.now() - this.elapsedSeconds * 1000;
+
+      this.timerId = setInterval(() => {
+        this.elapsedSeconds = Math.floor(
+          (Date.now() - this.startTimeStamp) / 1000,
+        );
+      }, 1000);
+    },
+    stopTimer() {
+      if (this.timerId) {
+        clearInterval(this.timerId);
+        this.timerId = null;
+      }
+      this.isRunning = false;
+    },
+
+    resetTimer() {
+      this.stopTimer();
+      this.elapsedSeconds = 0;
+      this.startTimeStamp = null;
+    },
     /**
      * Reset toàn bộ
      */
     resetGame() {
-      this.gameGrid = createEmptyBoard()
-      this.initialGrid = createEmptyBoard()
-      this.solution = createEmptyBoard()
+      this.gameGrid = createEmptyBoard();
+      this.initialGrid = createEmptyBoard();
+      this.solution = createEmptyBoard();
 
-      this.difficulty = ''
-      this.createdAt = null
+      this.difficulty = "";
+      this.createdAt = null;
 
-      this.isStarted = false
-      this.isCompleted = false
-      this.isValidBoard = true
+      this.isStarted = false;
+      this.isCompleted = false;
+      this.isValidBoard = true;
 
-      this.history = []
-      this.redoStack = []
-    }
+      this.history = [];
+      this.redoStack = [];
+
+      this.resetTimer();
+    },
   },
 
   persist: {
-    key: 'sudoku-game',
+    key: "sudoku-game",
     storage: localStorage,
     paths: [
-      'gameGrid',
-      'initialGrid',
-      'solution',
-      'difficulty',
-      'createdAt'
+      "gameGrid",
+      "initialGrid",
+      "solution",
+      "difficulty",
+      "createdAt",
+      "elapseSeconds",
+      "isRunning",
     ],
     afterRestore: ({ store }) => {
-      const hasGame = store.gameGrid.flat().some(v => v !== 0)
+      const hasGame = store.gameGrid.flat().some((v) => v !== 0);
 
       if (hasGame) {
-        store.isStarted = true
-        store.isValidBoard = store.validateCurrentBoard()
-        store.checkCompletion()
+        store.isStarted = true;
+        store.isValidBoard = store.validateCurrentBoard();
+        store.checkCompletion();
+
+        if (store.isRunning) {
+          store.startTimer();
+        }
       }
-    }
-  }
-})
+    },
+  },
+});
