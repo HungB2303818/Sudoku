@@ -21,7 +21,10 @@ export const useGameStore = defineStore('game', {
     isValidBoard: true,
 
     selectedRow: null,
-    selectedCol: null
+    selectedCol: null,
+
+    history: [],
+    redoStack: []
   }),
 
   getters: {
@@ -59,6 +62,9 @@ export const useGameStore = defineStore('game', {
       this.isCompleted = false
       this.isValidBoard = true
 
+      this.history = []
+      this.redoStack = []
+
       this.clearSelection()
     },
 
@@ -66,17 +72,30 @@ export const useGameStore = defineStore('game', {
      * Cập nhật 1 ô
      */
     updateCell(row, col, value) {
-      // Không cho sửa ô gốc
-      if (this.initialGrid[row][col] !== 0) return
+  // Không cho sửa ô gốc
+  if (this.initialGrid[row][col] !== 0) return
 
-      this.gameGrid[row][col] = value
+  const oldValue = this.gameGrid[row][col]
 
-      // Validate sau khi cập nhật
-      this.isValidBoard = this.validateCurrentBoard()
+  // Không lưu nếu không thay đổi
+  if (oldValue === value) return
 
-      // Kiểm tra hoàn thành
-      this.checkCompletion()
-    },
+  // Lưu history
+  this.history.push({
+    row,
+    col,
+    prevValue: oldValue,
+    newValue: value
+  })
+
+  // Clear redo nếu có thao tác mới
+  this.redoStack = []
+
+  this.gameGrid[row][col] = value
+
+  this.isValidBoard = this.validateCurrentBoard()
+  this.checkCompletion()
+},
 
     inputNumber(value) {
       if (this.selectedRow === null) return
@@ -147,6 +166,18 @@ export const useGameStore = defineStore('game', {
       })
     },
 
+    undo() {
+  if (this.history.length === 0) return
+
+  const lastMove = this.history.pop()
+
+  this.gameGrid[lastMove.row][lastMove.col] = lastMove.prevValue
+
+  this.redoStack.push(lastMove)
+
+  this.isValidBoard = this.validateCurrentBoard()
+  this.isCompleted = false
+},
     /**
      * Reset toàn bộ
      */
@@ -161,6 +192,9 @@ export const useGameStore = defineStore('game', {
       this.isStarted = false
       this.isCompleted = false
       this.isValidBoard = true
+
+      this.history = []
+      this.redoStack = []
     }
   },
 

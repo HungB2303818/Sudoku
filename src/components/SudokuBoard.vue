@@ -44,13 +44,10 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const selected = ref({ r: -1, c: -1 })
 
 const errors = ref(
   Array.from({ length: 9 }, () => Array(9).fill(false))
 )
-
-
 // =======================
 // Border logic 3x3 blocks
 // =======================
