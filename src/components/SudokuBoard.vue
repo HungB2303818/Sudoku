@@ -8,12 +8,14 @@
         <SudokuCell
           v-for="(cell, c) in row"
           :key="c"
+          :row="r"
+          :col="c"
           :value="cell"
           :is-initial="initialGrid[r][c] !== 0"
-          :is-selected="selected.r === r && selected.c === c"
+          :is-selected="store.selectedRow === r && store.selectedCol === c"
           :is-error="errors[r][c]"
           :border-classes="getBorderClasses(r, c)"
-          @click="selectCell(r, c)"
+          @select="store.selectCell"
           class="w-full h-full"
         />
       </template>
@@ -25,6 +27,9 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import SudokuCell from './SudokuCell.vue'
 import { isValid } from '../logic/validator'
+import { useGameStore } from '../stores/gameStore'
+
+const store = useGameStore()
 
 const props = defineProps({
   modelValue: {
@@ -59,15 +64,6 @@ const getBorderClasses = (r, c) => {
   
   return classes;
 };
-
-
-// =======================
-// Selection
-// =======================
-const selectCell = (r, c) => {
-  selected.value = { r, c }
-}
-
 
 // =======================
 // Validate board safely
@@ -109,23 +105,21 @@ const updateCell = (r, c, value) => {
 }
 
 
-// =======================
-// Keyboard input
-// =======================
+
+// Keyboard input (store pinia)
 const handleKeyDown = (e) => {
-  const { r, c } = selected.value
+  const r = store.selectedRow
+  const c = store.selectedCol
 
-  if (r === -1 || c === -1) return
-
-  // Không cho sửa ô đề
+  if (r === null || c === null) return
   if (props.initialGrid[r][c] !== 0) return
 
   if (/^[1-9]$/.test(e.key)) {
-    updateCell(r, c, parseInt(e.key))
+    store.inputNumber(parseInt(e.key))
   }
 
   if (e.key === 'Backspace' || e.key === 'Delete') {
-    updateCell(r, c, 0)
+    store.inputNumber(0)
   }
 }
 

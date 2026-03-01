@@ -18,7 +18,10 @@ export const useGameStore = defineStore('game', {
 
     isStarted: false,
     isCompleted: false,
-    isValidBoard: true
+    isValidBoard: true,
+
+    selectedRow: null,
+    selectedCol: null
   }),
 
   getters: {
@@ -27,6 +30,18 @@ export const useGameStore = defineStore('game', {
   }
 },
   actions: {
+
+    //UI
+    selectCell(row, col) {
+      if (this.initialGrid[row][col] !== 0) return
+      this.selectedRow = row
+      this.selectedCol = col
+    },
+
+    clearSelection() {
+      this.selectedRow = null
+      this.selectedCol = null
+    },
     /**
      * Bắt đầu game mới
      */
@@ -43,6 +58,8 @@ export const useGameStore = defineStore('game', {
       this.isStarted = true
       this.isCompleted = false
       this.isValidBoard = true
+
+      this.clearSelection()
     },
 
     /**
@@ -61,6 +78,15 @@ export const useGameStore = defineStore('game', {
       this.checkCompletion()
     },
 
+    inputNumber(value) {
+      if (this.selectedRow === null) return
+
+      this.updateCell(
+        this.selectedRow,
+        this.selectedCol,
+        value
+      )
+    },
     /**
      * Giải tự động
      */
