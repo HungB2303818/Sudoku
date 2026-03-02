@@ -7,6 +7,10 @@ function createEmptyBoard() {
   return Array.from({ length: 9 }, () => Array(9).fill(0));
 }
 
+function cloneBoard(board) {
+  return board.map((row) => [...row]);
+}
+
 export const useGameStore = defineStore("game", {
   state: () => ({
     gameGrid: createEmptyBoard(),
@@ -33,6 +37,11 @@ export const useGameStore = defineStore("game", {
     timerId: null,
     startTimeStamp: null,
     isRunning: false,
+
+    //HINT
+    hintCells: [],
+    hintCount: 0,
+    maxHints: 3,
   }),
 
   getters: {
@@ -44,6 +53,10 @@ export const useGameStore = defineStore("game", {
       const m = Math.floor(state.elapsedSeconds / 60);
       const s = state.elapsedSeconds % 60;
       return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+    },
+
+    remainingHints: (state) => {
+      return state.maxHints - state.hintCount;
     },
   },
   actions: {
@@ -84,6 +97,9 @@ export const useGameStore = defineStore("game", {
       this.startTimeStamp = null;
 
       this.startTimer();
+
+      this.hintCount = 0;
+      this.hintCells = [];
 
       this.clearSelection();
     },
@@ -222,6 +238,39 @@ export const useGameStore = defineStore("game", {
       this.elapsedSeconds = 0;
       this.startTimeStamp = null;
     },
+
+    //HINT
+    hint() {
+      if (this.hintCount >= this.maxHints) return;
+
+      // 1. Lấy danh sách các ô trống
+      const emptyCells = [];
+
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          if (this.gameGrid[r][c] === 0) {
+            emptyCells.push({ row: r, col: c });
+          }
+        }
+      }
+
+      // Không còn ô trống
+      if (emptyCells.length === 0) return;
+
+      // 2. Random một ô
+      const randomIndex = Math.floor(Math.random() * emptyCells.length);
+      const { row, col } = emptyCells[randomIndex];
+
+      // 3. Lấy giá trị đúng
+      const correctValue = this.solution[row][col];
+
+      // 4. Update bằng updateCell để giữ undo + validate
+      this.updateCell(row, col, correctValue);
+
+      this.hintCells.push({ row, col });
+
+      this.hintCount++;
+    },
     /**
      * Reset toàn bộ
      */
@@ -240,6 +289,9 @@ export const useGameStore = defineStore("game", {
       this.history = [];
       this.redoStack = [];
 
+      this.hintCount = 0;
+      this.hintCells = [];
+      
       this.resetTimer();
     },
   },
@@ -253,7 +305,7 @@ export const useGameStore = defineStore("game", {
       "solution",
       "difficulty",
       "createdAt",
-      "elapseSeconds",
+      "elapsedSeconds",
       "isRunning",
     ],
     afterRestore: ({ store }) => {
