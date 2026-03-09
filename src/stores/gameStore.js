@@ -196,6 +196,7 @@ export const useGameStore = defineStore("game", {
         difficulty: data.difficulty,
         createdAt: data.createdAt,
         isStarted: true,
+        isRunning: true
       });
     },
 
