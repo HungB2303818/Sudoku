@@ -137,6 +137,8 @@ export const useGameStore = defineStore("game", {
       if (this.selectedRow === null) return;
 
       this.updateCell(this.selectedRow, this.selectedCol, value);
+
+      this.checkCompletion();
     },
     /**
      * Giải tự động
@@ -175,14 +177,12 @@ export const useGameStore = defineStore("game", {
     checkCompletion() {
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
-          if (this.gameGrid[r][c] === 0) return;
+          if (this.gameGrid[r][c] !== this.solution) return;
         }
       }
 
-      if (this.validateCurrentBoard()) {
+     
         this.isCompleted = true;
-        this.isCompleted = true;
-      }
     },
 
     /**
@@ -226,6 +226,7 @@ export const useGameStore = defineStore("game", {
         );
       }, 1000);
     },
+    
     stopTimer() {
       if (this.timerId) {
         clearInterval(this.timerId);
