@@ -2,42 +2,84 @@
   <Teleport to="body">
     <div
       v-if="modelValue"
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]"
+      class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999]"
       @click.self="close"
     >
-      <button
-        @click="handleClick('easy')"
-        class="bg-emerald-600 hover:bg-emerald-500 py-4 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-emerald-900/30"
+      <div
+        class="w-[340px] rounded-2xl p-6 bg-gradient-to-b from-slate-900 to-slate-800 border border-slate-700 shadow-2xl"
       >
-        Dễ (Easy)
-      </button>
+        <!-- title -->
+        <h2 class="text-center text-lg font-semibold text-slate-200 mb-6">
+          Choose Difficulty
+        </h2>
 
-      <button
-        @click="handleClick('medium')"
-        class="bg-amber-600 hover:bg-amber-500 py-4 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-amber-900/30"
-      >
-        Trung bình (Medium)
-      </button>
+        <!-- EASY -->
+        <button
+          @click="handleClick('easy')"
+          class="w-full flex items-center gap-4 p-4 mb-3 rounded-xl border border-slate-700 hover:border-cyan-400 hover:bg-slate-800 transition"
+        >
+          <span class="text-cyan-400 text-xl">🛡️</span>
 
-      <button
-        @click="handleClick('hard')"
-        class="bg-rose-600 hover:bg-rose-500 py-4 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-rose-900/30"
-      >
-        Khó (Hard)
-      </button>
+          <div class="text-left">
+            <p class="font-semibold text-slate-200">Easy</p>
+            <p class="text-sm text-slate-400">More hints, fewer empty cells</p>
+          </div>
+        </button>
+
+        <!-- MEDIUM -->
+        <button
+          @click="handleClick('medium')"
+          class="w-full flex items-center gap-4 p-4 mb-3 rounded-xl border border-slate-700 hover:border-cyan-400 hover:bg-slate-800 transition"
+        >
+          <span class="text-cyan-400 text-xl">🎯</span>
+
+          <div class="text-left">
+            <p class="font-semibold text-slate-200">Medium</p>
+            <p class="text-sm text-slate-400">
+              A balanced challenge for regular players
+            </p>
+          </div>
+        </button>
+
+        <!-- HARD -->
+        <button
+          @click="handleClick('hard')"
+          class="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-700 hover:border-cyan-400 hover:bg-slate-800 transition"
+        >
+          <span class="text-cyan-400 text-xl">🔥</span>
+
+          <div class="text-left">
+            <p class="font-semibold text-slate-200">Hard</p>
+            <p class="text-sm text-slate-400">
+              Fewer hints, complex patterns to solve
+            </p>
+          </div>
+        </button>
+
+        <!-- divider -->
+        <div class="border-t border-slate-700 my-6"></div>
+
+        <!-- cancel -->
+        <button
+          @click="close"
+          class="w-full text-slate-400 hover:text-slate-200 font-semibold tracking-widest text-sm"
+        >
+          CANCEL
+        </button>
+      </div>
     </div>
   </Teleport>
 </template>
 
 <script setup>
 const prop = defineProps({
-  modelValue: Boolean
+  modelValue: Boolean,
 });
-const emit = defineEmits(['update:modelValue', 'handleStartGame']);
+const emit = defineEmits(["update:modelValue", "handleStartGame"]);
 
 const handleClick = (level) => {
-    emit('update:modelValue', false);
-    emit('handleStartGame', level);
-}
-const close = () => emit('update:modelValue', false);
+  emit("update:modelValue", false);
+  emit("handleStartGame", level);
+};
+const close = () => emit("update:modelValue", false);
 </script>

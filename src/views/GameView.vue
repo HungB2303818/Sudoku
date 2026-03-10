@@ -80,23 +80,24 @@
         <div class="flex justify-between gap-3">
           <button
             @click="store.inputNumber(0)"
-            class="flex-1 py-2 rounded-full bg-slate-700 hover:bg-slate-600 text-sm font-semibold transition active:scale-95"
+            class="flex-1 h-12 flex items-center justify-center rounded-full bg-slate-700 hover:bg-slate-600 transition active:scale-95"
           >
-            Xóa
+            <BackspaceIcon class="w-7 h-7" />
           </button>
 
           <button
             @click="store.undo()"
-            class="flex-1 py-2 rounded-full bg-slate-700 hover:bg-slate-600 text-sm font-semibold transition active:scale-95"
+            class="flex-1 h-12 flex items-center justify-center rounded-full bg-slate-700 hover:bg-slate-600 transition active:scale-95"
           >
-            Undo
+            <ArrowUturnLeftIcon class="w-7 h-7" />
           </button>
 
           <button
             @click="store.hint()"
-            class="relative flex-1 py-2 rounded-full bg-slate-700 hover:bg-slate-600 text-sm font-semibold transition active:scale-95"
+            class="relative flex-1 h-12 flex items-center justify-center rounded-full bg-slate-700 hover:bg-slate-600 transition active:scale-95"
           >
-          <LightBulbIcon class="w-6 h-6"></LightBulbIcon>
+            <LightBulbIcon class="w-7 h-7" />
+
             <span
               class="absolute -top-1 -right-1 bg-cyan-400 text-xs text-black rounded-full w-5 h-5 flex items-center justify-center"
             >
@@ -135,7 +136,11 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "../stores/gameStore";
 
-import { LightBulbIcon } from "@heroicons/vue/24/outline";
+import {
+  ArrowUturnLeftIcon,
+  BackspaceIcon,
+  LightBulbIcon,
+} from "@heroicons/vue/24/outline";
 
 import SudokuBoard from "../components/SudokuBoard.vue";
 import GuideModal from "../components/GuideModal.vue";

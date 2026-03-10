@@ -8,7 +8,7 @@
         : 'bg-[#030a17] text-cyan-300', // số người chơi
 
       isSelected
-        ? 'bg-blue-500/15 ring-1 ring-blue-400/60 shadow-[0_0_10px_rgba(59,130,246,0.25)] z-10'
+        ? 'bg-blue-500/30 shadow-[0_0_10px_rgba(59,130,246,0.25)] z-10'
         : '',
 
       isError
