@@ -120,7 +120,7 @@
 
         <!-- SOLVE BUTTON -->
         <button
-          @click="store.autoSolve()"
+          @click="solveGame"
           class="mt-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-3 rounded-xl font-bold text-white shadow-lg transition active:scale-95"
         >
           GIẢI VÉT CẠN
@@ -160,4 +160,9 @@ onMounted(() => {
 const goBack = () => {
   router.push("/");
 };
+
+function solveGame() {
+  store.autoSolve();
+  store.stopTimer();
+}
 </script>

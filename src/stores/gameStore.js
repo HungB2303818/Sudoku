@@ -41,7 +41,7 @@ export const useGameStore = defineStore("game", {
     //HINT
     hintCells: [],
     hintCount: 0,
-    maxHints: 3,
+    maxHints: 0,
   }),
 
   getters: {
@@ -100,7 +100,13 @@ export const useGameStore = defineStore("game", {
 
       this.hintCount = 0;
       this.hintCells = [];
-
+      
+      const hintByDifficulty = {
+        easy: 5,
+        medium: 3,
+        hard: 2
+      }
+      this.maxHints = hintByDifficulty[level];
       this.clearSelection();
     },
 

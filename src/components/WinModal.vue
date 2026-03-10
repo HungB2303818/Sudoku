@@ -6,27 +6,63 @@
       class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999]"
     >
       <div
-        class="w-[320px] bg-gradient-to-b from-slate-900 to-slate-800 border border-slate-700 rounded-2xl p-8 text-center shadow-2xl space-y-5"
+        class="w-[360px] bg-gradient-to-b from-slate-900 to-slate-800 border border-slate-700 rounded-2xl p-8 text-center shadow-2xl space-y-6"
       >
         <!-- Icon -->
-        <div class="text-5xl">🎉</div>
+        <div
+          class="w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-yellow-400/20 text-yellow-400 text-3xl"
+        >
+          ✨
+        </div>
 
         <!-- Title -->
-        <h2 class="text-2xl font-bold text-slate-100">Chúc mừng!</h2>
+        <div class="space-y-1">
+          <h2 class="text-2xl font-bold text-slate-100">Chúc mừng!</h2>
+          <p class="text-slate-400 text-sm">Bạn đã hoàn thành Sudoku</p>
+        </div>
 
-        <!-- Message -->
-        <p class="text-slate-400">Bạn đã hoàn thành Sudoku</p>
+        <!-- Stats -->
+        <div class="space-y-3">
+          <!-- Time -->
+          <div
+            class="flex items-center justify-between px-4 py-3 rounded-xl bg-slate-800 border border-slate-700"
+          >
+            <span class="text-slate-400 text-sm">Thời gian</span>
+            <span class="text-slate-200 font-semibold">
+              {{ store.elapsedSeconds }}
+            </span>
+          </div>
 
-        <!-- Divider -->
-        <div class="border-t border-slate-700"></div>
+          <!-- Difficulty -->
+          <div
+            class="flex items-center justify-between px-4 py-3 rounded-xl bg-slate-800 border border-slate-700"
+          >
+            <span class="text-slate-400 text-sm">Độ khó</span>
+            <span class="text-slate-200 font-semibold">
+              {{ store.difficulty }}
+            </span>
+          </div>
 
-        <!-- Action -->
-        <button
-          @click="close"
-          class="w-full py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 font-semibold text-white transition hover:scale-105 active:scale-95 shadow-lg shadow-cyan-900/30"
-        >
-          Chơi lại
-        </button>
+          <!-- Hints -->
+          <div
+            class="flex items-center justify-between px-4 py-3 rounded-xl bg-slate-800 border border-slate-700"
+          >
+            <span class="text-slate-400 text-sm">Gợi ý đã dùng</span>
+            <span class="text-slate-200 font-semibold">
+              {{ store.hintCount }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="space-y-3 pt-2">
+          <button
+            @click="close"
+            class="w-full py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 font-semibold text-white transition hover:scale-[1.02] active:scale-95 shadow-lg shadow-cyan-900/30"
+          >
+            Chơi lại
+          </button>
+        </div>
       </div>
     </div>
   </Teleport>
@@ -40,4 +76,6 @@ const store = useGameStore();
 const close = () => {
   store.isCompleted = false;
 };
+
+
 </script>
