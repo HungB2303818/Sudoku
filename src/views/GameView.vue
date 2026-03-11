@@ -154,8 +154,9 @@ onMounted(() => {
   // Nếu vào /game mà chưa có game → quay về menu
   if (!store.isStarted && !store.isCompleted) {
     router.push("/");
-    store.startTimer();
+    return;
   }
+   store.startTimer();
 });
 
 const goBack = () => {

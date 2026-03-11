@@ -29,7 +29,7 @@
           >
             <span class="text-slate-400 text-sm">Thời gian</span>
             <span class="text-slate-200 font-semibold">
-              {{ store.elapsedSeconds }}
+              {{ formatTime(store.elapsedSeconds) }}
             </span>
           </div>
 
@@ -76,6 +76,12 @@ const store = useGameStore();
 const close = () => {
   store.isCompleted = false;
 };
+function formatTime(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
 
+  return [h, m, s].map((v) => v.toString().padStart(2, "0")).join(":");
+}
 
 </script>

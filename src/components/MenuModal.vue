@@ -10,33 +10,29 @@
       >
         <!-- title -->
         <h2 class="text-center text-lg font-semibold text-slate-200 mb-6">
-          Choose Difficulty
+          Chọn độ khó
         </h2>
 
         <!-- EASY -->
         <button
           @click="handleClick('easy')"
-          class="w-full flex items-center gap-4 p-4 mb-3 rounded-xl border border-slate-700 hover:border-cyan-400 hover:bg-slate-800 transition"
+          class="w-full flex items-center gap-4 p-4 mb-3 rounded-xl border border-slate-700 hover:bg-slate-800 transition"
         >
-          <span class="text-cyan-400 text-xl">🛡️</span>
-
           <div class="text-left">
             <p class="font-semibold text-slate-200">Easy</p>
-            <p class="text-sm text-slate-400">More hints, fewer empty cells</p>
+            <p class="text-sm text-slate-400">Nhiều gợi ý, ít ô trống hơn</p>
           </div>
         </button>
 
         <!-- MEDIUM -->
         <button
           @click="handleClick('medium')"
-          class="w-full flex items-center gap-4 p-4 mb-3 rounded-xl border border-slate-700 hover:border-cyan-400 hover:bg-slate-800 transition"
+          class="w-full flex items-center gap-4 p-4 mb-3 rounded-xl border border-slate-700 hover:bg-slate-800 transition"
         >
-          <span class="text-cyan-400 text-xl">🎯</span>
-
           <div class="text-left">
             <p class="font-semibold text-slate-200">Medium</p>
             <p class="text-sm text-slate-400">
-              A balanced challenge for regular players
+              Thử thách cân bằng cho người chơi
             </p>
           </div>
         </button>
@@ -44,14 +40,13 @@
         <!-- HARD -->
         <button
           @click="handleClick('hard')"
-          class="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-700 hover:border-cyan-400 hover:bg-slate-800 transition"
+          class="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-700 hover:bg-slate-800 transition"
         >
-          <span class="text-cyan-400 text-xl">🔥</span>
 
           <div class="text-left">
             <p class="font-semibold text-slate-200">Hard</p>
             <p class="text-sm text-slate-400">
-              Fewer hints, complex patterns to solve
+              Ít gợi ý, đề bài phức tạp
             </p>
           </div>
         </button>
@@ -64,7 +59,7 @@
           @click="close"
           class="w-full text-slate-400 hover:text-slate-200 font-semibold tracking-widest text-sm"
         >
-          CANCEL
+          Hủy 
         </button>
       </div>
     </div>

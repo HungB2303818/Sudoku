@@ -2,16 +2,15 @@
   <div
     class="h-full w-full flex flex-col items-center justify-center space-y-14 animate-in fade-in duration-500"
   >
-  <!-- Header -->
-    <div class="flex justify-end">
-      <div>
-      <button
-        @click="showStatistic = true"
-        class="w-10 h-10"
-      >
+    <!-- Header -->
+    <div class="flex justify-between items-center w-full px-15">
+      <button @click="showStatistic = true" class="w-10 h-10">
         <ChartBarIcon></ChartBarIcon>
       </button>
-    </div>
+
+      <button @click="showGuide = true" class="w-10 h-10">
+        <QuestionMarkCircleIcon></QuestionMarkCircleIcon>
+      </button>
     </div>
     <div class="text-center space-y-4">
       <h1
@@ -42,6 +41,7 @@
       @handleStartGame="handleStartGame"
     ></MenuModal>
     <StatisticModal v-model="showStatistic"></StatisticModal>
+    <GuideModal v-model="showGuide"></GuideModal>
   </div>
 </template>
 
@@ -51,12 +51,18 @@ import { useGameStore } from "../stores/gameStore";
 import { ref } from "vue";
 import MenuModal from "../components/MenuModal.vue";
 import StatisticModal from "../components/StatisticModal.vue";
-import { ChartBarIcon } from "@heroicons/vue/24/outline";
+import GuideModal from "../components/GuideModal.vue";
+
+import {
+  ChartBarIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/vue/24/outline";
 
 const router = useRouter();
 const store = useGameStore();
 const showMode = ref(false);
 const showStatistic = ref(false);
+const showGuide = ref(false);
 const level = ref("");
 
 const handleStartGame = (data) => {
