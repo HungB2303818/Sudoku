@@ -42,6 +42,11 @@ export const useGameStore = defineStore("game", {
     hintCells: [],
     hintCount: 0,
     maxHints: 0,
+
+    //STATISTIC
+    totalGame: 0,
+    totalTime: 0,
+    totalHint: 0
   }),
 
   getters: {
@@ -108,6 +113,10 @@ export const useGameStore = defineStore("game", {
       }
       this.maxHints = hintByDifficulty[level];
       this.clearSelection();
+
+      //STATISTIC
+      this.totalGame++;
+
     },
 
     /**
@@ -156,6 +165,8 @@ export const useGameStore = defineStore("game", {
         this.gameGrid = boardCopy;
         this.isCompleted = true;
         this.isValidBoard = true;
+
+        this.stopTimer();
       }
     },
 
@@ -183,12 +194,17 @@ export const useGameStore = defineStore("game", {
     checkCompletion() {
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
-          if (this.gameGrid[r][c] !== this.solution) return;
+          if (this.gameGrid[r][c] == 0) return;
         }
       }
+      this.isCompleted = this.validateCurrentBoard();
+      // this.isCompleted = true;
 
-     
-        this.isCompleted = true;
+      //????????
+      if(this.isCompleted){
+        this.stopTimer();
+        this.totalHint += this.hintCount;
+      }
     },
 
     /**
@@ -204,6 +220,8 @@ export const useGameStore = defineStore("game", {
         isStarted: true,
         isRunning: true
       });
+
+      this.startTimer();
     },
 
     undo() {
@@ -225,7 +243,6 @@ export const useGameStore = defineStore("game", {
 
       this.isRunning = true;
       this.startTimeStamp = Date.now() - this.elapsedSeconds * 1000;
-
       this.timerId = setInterval(() => {
         this.elapsedSeconds = Math.floor(
           (Date.now() - this.startTimeStamp) / 1000,
@@ -239,6 +256,7 @@ export const useGameStore = defineStore("game", {
         this.timerId = null;
       }
       this.isRunning = false;
+      this.totalTime += this.elapsedSeconds;
     },
 
     resetTimer() {
@@ -300,6 +318,7 @@ export const useGameStore = defineStore("game", {
       this.hintCount = 0;
       this.hintCells = [];
       
+      this.elapsedSeconds = 0;
       this.resetTimer();
     },
   },

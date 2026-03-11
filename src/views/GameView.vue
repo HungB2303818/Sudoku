@@ -152,13 +152,15 @@ const store = useGameStore();
 
 onMounted(() => {
   // Nếu vào /game mà chưa có game → quay về menu
-  if (!store.isStarted) {
+  if (!store.isStarted && !store.isCompleted) {
     router.push("/");
+    store.startTimer();
   }
 });
 
 const goBack = () => {
   router.push("/");
+  store.stopTimer();
 };
 
 function solveGame() {
