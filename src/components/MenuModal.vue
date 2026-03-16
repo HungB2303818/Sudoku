@@ -19,7 +19,7 @@
           class="w-full flex items-center gap-4 p-4 mb-3 rounded-xl border border-slate-700 hover:bg-slate-800 transition"
         >
           <div class="text-left">
-            <p class="font-semibold text-slate-200">Easy</p>
+            <p class="font-semibold text-green-400">Easy</p>
             <p class="text-sm text-slate-400">Nhiều gợi ý, ít ô trống hơn</p>
           </div>
         </button>
@@ -30,7 +30,7 @@
           class="w-full flex items-center gap-4 p-4 mb-3 rounded-xl border border-slate-700 hover:bg-slate-800 transition"
         >
           <div class="text-left">
-            <p class="font-semibold text-slate-200">Medium</p>
+            <p class="font-semibold text-yellow-400">Medium</p>
             <p class="text-sm text-slate-400">
               Thử thách cân bằng cho người chơi
             </p>
@@ -44,7 +44,7 @@
         >
 
           <div class="text-left">
-            <p class="font-semibold text-slate-200">Hard</p>
+            <p class="font-semibold text-red-400">Hard</p>
             <p class="text-sm text-slate-400">
               Ít gợi ý, đề bài phức tạp
             </p>

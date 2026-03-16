@@ -220,8 +220,9 @@ export const useGameStore = defineStore("game", {
         isStarted: true,
         isRunning: true
       });
-
-      this.startTimer();
+      if(!this.isCompleted){
+        this.startTimer();
+      }
     },
 
     undo() {

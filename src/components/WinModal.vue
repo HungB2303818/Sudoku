@@ -60,7 +60,7 @@
             @click="close"
             class="w-full py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 font-semibold text-white transition hover:scale-[1.02] active:scale-95 shadow-lg shadow-cyan-900/30"
           >
-            Chơi lại
+            Quay lại
           </button>
         </div>
       </div>
@@ -75,6 +75,7 @@ const store = useGameStore();
 
 const close = () => {
   store.isCompleted = false;
+
 };
 function formatTime(seconds) {
   const h = Math.floor(seconds / 3600);

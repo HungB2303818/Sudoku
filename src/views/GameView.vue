@@ -41,14 +41,23 @@
           >
             Độ khó
           </p>
-          <p class="text-emerald-400 font-sans font-bold text-lg">
+          <p
+            :class="[
+              ' font-sans font-bold text-lg',
+              {
+                'text-emerald-400': store.difficulty === 'easy',
+                'text-yellow-400': store.difficulty === 'medium',
+                'text-red-400': store.difficulty === 'hard',
+              },
+            ]"
+          >
             {{ store.difficulty?.toUpperCase() }}
           </p>
         </div>
       </div>
     </div>
     <GuideModal v-model="showGuide"></GuideModal>
-
+    
     <!-- MAIN CONTENT -->
     <div class="flex justify-center items-start gap-12 flex-1 pt-15 px-5">
       <!-- LEFT: BOARD -->
@@ -156,7 +165,8 @@ onMounted(() => {
     router.push("/");
     return;
   }
-   store.startTimer();
+  store.startTimer();
+  console.log(store.checkCompletion());
 });
 
 const goBack = () => {
