@@ -94,7 +94,7 @@
             <span
               class="text-xl sm:text-2xl lg:text-3xl font-mono font-bold text-white tabular-nums"
             >
-              {{ store.formattedTime }}
+              {{ time.formattedTime }}
             </span>
           </div>
 
@@ -158,7 +158,7 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "../stores/gameStore";
-
+import { useTimeStore } from "../stores/timeStore";
 import {
   ArrowUturnLeftIcon,
   BackspaceIcon,
@@ -172,24 +172,24 @@ import WinModal from "../components/WinModal.vue";
 const showGuide = ref(false);
 const router = useRouter();
 const store = useGameStore();
-
+const time = useTimeStore();
 onMounted(() => {
   // Nếu vào /game mà chưa có game → quay về menu
   if (!store.isStarted && !store.isCompleted) {
     router.push("/");
     return;
   }
-  store.startTimer();
+  time.startTimer();
   console.log(store.checkCompletion());
 });
 
 const goBack = () => {
   router.push("/");
-  store.stopTimer();
+  time.stopTimer();
 };
 
 function solveGame() {
   store.autoSolve();
-  store.stopTimer();
+  time.stopTimer();
 }
 </script>

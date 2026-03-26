@@ -2,13 +2,10 @@ import { defineStore } from "pinia";
 import { generateGame } from "../logic/generator";
 import { solveSudoku } from "../logic/solver";
 import { isValid } from "../logic/validator";
+import { useTimeStore } from "../stores/timeStore";
 
 function createEmptyBoard() {
   return Array.from({ length: 9 }, () => Array(9).fill(0));
-}
-
-function cloneBoard(board) {
-  return board.map((row) => [...row]);
 }
 
 export const useGameStore = defineStore("game", {
@@ -25,18 +22,15 @@ export const useGameStore = defineStore("game", {
     isCompleted: false,
     isValidBoard: true,
 
+    //CELL
     selectedRow: null,
     selectedCol: null,
+    noteMode: false,
 
     //FOR UNDO
     history: [],
     redoStack: [],
 
-    //TIMER
-    elapsedSeconds: 0,
-    timerId: null,
-    startTimeStamp: null,
-    isRunning: false,
 
     //HINT
     hintCells: [],
@@ -53,13 +47,6 @@ export const useGameStore = defineStore("game", {
     hasSavedGame: (state) => {
       return state.gameGrid.flat().some((v) => v !== 0);
     },
-
-    formattedTime(state) {
-      const m = Math.floor(state.elapsedSeconds / 60);
-      const s = state.elapsedSeconds % 60;
-      return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-    },
-
     remainingHints: (state) => {
       return state.maxHints - state.hintCount;
     },
@@ -72,6 +59,7 @@ export const useGameStore = defineStore("game", {
       this.selectedCol = col;
     },
 
+
     clearSelection() {
       this.selectedRow = null;
       this.selectedCol = null;
@@ -80,9 +68,13 @@ export const useGameStore = defineStore("game", {
      * Bắt đầu game mới
      */
     startNewGame(level) {
-      this.stopTimer();
 
       const game = generateGame(level);
+
+      const timeStore = useTimeStore();
+      timeStore.stopTimer();
+      timeStore.resetTimer();
+      timeStore.startTimer();
 
       this.gameGrid = game.currentBoard;
       this.initialGrid = game.initialBoard;
@@ -97,11 +89,6 @@ export const useGameStore = defineStore("game", {
 
       this.history = [];
       this.redoStack = [];
-
-      this.elapsedSeconds = 0;
-      this.startTimeStamp = null;
-
-      this.startTimer();
 
       this.hintCount = 0;
       this.hintCells = [];
@@ -166,7 +153,8 @@ export const useGameStore = defineStore("game", {
         this.isCompleted = true;
         this.isValidBoard = true;
 
-        this.stopTimer();
+        const timeStore = useTimeStore();
+        timeStore.stopTimer();
       }
     },
 
@@ -202,7 +190,9 @@ export const useGameStore = defineStore("game", {
 
       //????????
       if(this.isCompleted){
-        this.stopTimer();
+        const timeStore = useTimeStore();
+        timeStore.stopTimer();
+
         this.totalHint += this.hintCount;
       }
     },
@@ -236,34 +226,6 @@ export const useGameStore = defineStore("game", {
 
       this.isValidBoard = this.validateCurrentBoard();
       this.isCompleted = false;
-    },
-
-    //TIMER
-    startTimer() {
-      if (this.isRunning) return;
-
-      this.isRunning = true;
-      this.startTimeStamp = Date.now() - this.elapsedSeconds * 1000;
-      this.timerId = setInterval(() => {
-        this.elapsedSeconds = Math.floor(
-          (Date.now() - this.startTimeStamp) / 1000,
-        );
-      }, 1000);
-    },
-    
-    stopTimer() {
-      if (this.timerId) {
-        clearInterval(this.timerId);
-        this.timerId = null;
-      }
-      this.isRunning = false;
-      this.totalTime += this.elapsedSeconds;
-    },
-
-    resetTimer() {
-      this.stopTimer();
-      this.elapsedSeconds = 0;
-      this.startTimeStamp = null;
     },
 
     //HINT

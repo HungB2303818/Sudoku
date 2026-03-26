@@ -1,15 +1,13 @@
 import { isValid } from "./validator"
 
-/**
- * Tạo ma trận 9x9 rỗng
- */
+
+//Tạo ma trận 9x9 rỗng
 function createEmptyBoard() {
   return Array.from({ length: 9 }, () => Array(9).fill(0))
 }
 
-/**
- * Shuffle mảng (Fisher-Yates chuẩn)
- */
+
+//Shuffle mảng (Fisher-Yates chuẩn)
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
