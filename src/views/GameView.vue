@@ -173,23 +173,27 @@ const showGuide = ref(false);
 const router = useRouter();
 const store = useGameStore();
 const time = useTimeStore();
+
 onMounted(() => {
-  // Nếu vào /game mà chưa có game → quay về menu
   if (!store.isStarted && !store.isCompleted) {
     router.push("/");
     return;
   }
-  time.startTimer();
-  console.log(store.checkCompletion());
-});
 
+  if (!time.isRunning && !store.isCompleted) {
+    time.startTimer();
+  }
+});
 const goBack = () => {
   router.push("/");
   time.stopTimer();
 };
 
 function solveGame() {
-  store.autoSolve();
-  time.stopTimer();
+  const result = store.autoSolve();
+
+  if (result?.type === "STOP_TIMER") {
+    time.stopTimer();
+  }
 }
 </script>

@@ -27,7 +27,6 @@
         >
           SUDOKU
         </h1>
-
       </div>
       <div class="flex flex-col space-y-4 w-85 p-4 rounded-3xl">
         <!-- START GAME -->
@@ -134,7 +133,11 @@ const level = ref("");
 
 const handleStartGame = (data) => {
   level.value = data;
-  store.startNewGame(level.value);
+  const res = store.startNewGame(level.value);
+  if (res?.type === "START_GAME") {
+    time.resetTimer();
+    time.startTimer();
+  }
   router.push("/game");
 };
 
