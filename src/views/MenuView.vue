@@ -111,6 +111,7 @@
 import { useRouter } from "vue-router";
 import { useGameStore } from "../stores/gameStore";
 import { useTimeStore } from "../stores/timeStore";
+import { useUIStore } from "../stores/uiStore";
 import { ref } from "vue";
 import MenuModal from "../components/MenuModal.vue";
 import StatisticModal from "../components/StatisticModal.vue";
@@ -126,6 +127,7 @@ import {
 const router = useRouter();
 const store = useGameStore();
 const time = useTimeStore();
+const ui = useUIStore();
 const showMode = ref(false);
 const showStatistic = ref(false);
 const showGuide = ref(false);
@@ -133,11 +135,13 @@ const level = ref("");
 
 const handleStartGame = (data) => {
   level.value = data;
-  const res = store.startNewGame(level.value);
-  if (res?.type === "START_GAME") {
-    time.resetTimer();
-    time.startTimer();
-  }
+  store.startNewGame(level.value);
+
+  ui.clearSelection();
+
+  time.resetTimer();
+  time.startTimer();
+
   router.push("/game");
 };
 

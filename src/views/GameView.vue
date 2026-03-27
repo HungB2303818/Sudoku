@@ -101,7 +101,7 @@
           <!-- TOOL BUTTONS -->
           <div class="flex justify-between gap-1.5 sm:gap-2 lg:gap-3">
             <button
-              @click="store.inputNumber(0)"
+              @click="inputNumber(0)"
               class="flex-1 h-9 sm:h-10 lg:h-12 flex items-center justify-center rounded-full bg-slate-700 hover:bg-slate-600 transition active:scale-95"
             >
               <BackspaceIcon class="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7" />
@@ -132,7 +132,7 @@
             <button
               v-for="num in 9"
               :key="num"
-              @click="store.inputNumber(num)"
+              @click="inputNumber(num)"
               class="aspect-square bg-slate-700 hover:bg-slate-600 rounded-md sm:rounded-lg text-base sm:text-lg lg:text-2xl font-semibold transition active:scale-95 flex items-center justify-center"
             >
               {{ num }}
@@ -159,6 +159,8 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "../stores/gameStore";
 import { useTimeStore } from "../stores/timeStore";
+import { useUIStore } from "../stores/uiStore";
+
 import {
   ArrowUturnLeftIcon,
   BackspaceIcon,
@@ -173,6 +175,7 @@ const showGuide = ref(false);
 const router = useRouter();
 const store = useGameStore();
 const time = useTimeStore();
+const ui = useUIStore();
 
 onMounted(() => {
   if (!store.isStarted && !store.isCompleted) {
@@ -196,4 +199,19 @@ function solveGame() {
     time.stopTimer();
   }
 }
+const inputNumber = (num) => {
+  const row = ui.selectedRow;
+  const col = ui.selectedCol;
+
+  if (row === null || col === null) return;
+
+  // không sửa ô ban đầu
+  if (store.initialGrid[row][col] !== 0) return;
+
+  if (ui.noteMode) {
+    store.toggleNote(row, col, num);
+  } else {
+    store.updateCell(row, col, num);
+  }
+};
 </script>

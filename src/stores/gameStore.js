@@ -26,7 +26,7 @@ export const useGameStore = defineStore("game", {
     redoStack: [],
 
     //HINT
-    hintCells: [],
+    lastHint: null,
     hintCount: 0,
     maxHints: 0,
 
@@ -48,12 +48,14 @@ export const useGameStore = defineStore("game", {
     startNewGame(level) {
       const game = createNewGame(level);
 
-      this.gameGrid = game.currentBoard;
-      this.initialGrid = game.initialBoard;
-      this.solution = game.solutionBoard;
+      console.log("bucciarati", game);
 
-      this.difficulty = game.meta.difficulty;
-      this.createdAt = game.meta.createdAt;
+      this.gameGrid = game.gameGrid;
+      this.initialGrid = game.initialGrid;
+      this.solution = game.solution;
+
+      this.difficulty = game.difficulty;
+      this.createdAt = game.createdAt;
 
       this.isStarted = true;
       this.isCompleted = false;
@@ -65,14 +67,7 @@ export const useGameStore = defineStore("game", {
       this.hintCount = 0;
       this.hintCells = [];
 
-      const hintByDifficulty = {
-        easy: 5,
-        medium: 3,
-        hard: 2,
-      };
-      this.maxHints = hintByDifficulty[level];
-      this.clearSelection();
-
+      this.maxHints = game.maxHints;
       //STATISTIC
       this.totalGame++;
 
@@ -95,13 +90,6 @@ export const useGameStore = defineStore("game", {
       return this.checkCompletion();
     },
 
-    inputNumber(value) {
-      if (this.selectedRow === null) return;
-
-      this.updateCell(this.selectedRow, this.selectedCol, value);
-
-      this.checkCompletion();
-    },
     autoSolve() {
       const solved = solveBoard(this.gameGrid);
 
@@ -112,6 +100,18 @@ export const useGameStore = defineStore("game", {
 
         return { type: "STOP_TIMER" };
       }
+    },
+    checkCompletion() {
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          if (this.gameGrid[r][c] !== this.solution[r][c]) {
+            return false;
+          }
+        }
+      }
+
+      this.isCompleted = true;
+      return true;
     },
     loadGame(data) {
       this.$patch({
@@ -135,6 +135,7 @@ export const useGameStore = defineStore("game", {
 
       this.isValidBoard = validateBoard(this.gameGrid);
       this.isCompleted = false;
+      this.lastHint = null;
     },
 
     //HINT
@@ -146,7 +147,7 @@ export const useGameStore = defineStore("game", {
 
       this.updateCell(hint.row, hint.col, hint.value);
 
-      this.hintCells.push(hint);
+      this.lastHint = { row: hint.row, col: hint.col };
       this.hintCount++;
     },
 
@@ -167,7 +168,6 @@ export const useGameStore = defineStore("game", {
 
       this.hintCount = 0;
       this.hintCells = [];
-
     },
   },
 

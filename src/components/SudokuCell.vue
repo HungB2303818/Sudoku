@@ -54,8 +54,6 @@ const handleClick = () => {
 };
 
 const isHint = computed(() => {
-  return store.hintCells.some(
-    (cell) => cell.row === props.row && cell.col === props.col,
-  );
+  return store.lastHint?.row === props.row && store.lastHint?.col === props.col;
 });
 </script>
