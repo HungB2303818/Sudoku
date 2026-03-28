@@ -8,11 +8,11 @@
         : 'bg-[#030a17] text-cyan-300', // số người chơi
 
       isSelected
-        ? 'bg-blue-500/30 shadow-[0_0_10px_rgba(59,130,246,0.25)] z-10'
+        ? 'bg-blue-500/15 z-10 transition-all duration-200'
         : '',
 
       isError
-        ? 'bg-red-900/30 text-red-400 shadow-[inset_0_0_8px_rgba(239,68,68,0.35)]'
+        ? 'bg-red-900/20 text-red-400/90 transition-all duration-200'
         : '',
 
       borderClasses,
@@ -20,7 +20,17 @@
       isHint ? 'bg-green-600/30 text-green-400' : '',
     ]"
   >
-    {{ value !== 0 ? value : "" }}
+    <!-- nếu có số -->
+    <div v-if="value !== 0">
+      {{ value }}
+    </div>
+
+    <!-- nếu rỗng → render note -->
+    <div v-if="ui.noteMode && value === 0" class="grid grid-cols-3 text-[10px] w-full h-full leading-none">
+      <span v-for="n in 9" :key="n" class="flex items-center justify-center relative w-full h-full">
+        {{ store.notes[row][col].includes(n) ? n : "" }}
+      </span>
+    </div>
 
     <!-- overlay highlight nhẹ -->
     <div
@@ -33,7 +43,9 @@
 <script setup>
 import { computed } from "vue";
 import { useGameStore } from "../stores/gameStore";
+import { useUIStore } from "../stores/uiStore";
 
+const ui = useUIStore();
 const store = useGameStore();
 
 const props = defineProps({

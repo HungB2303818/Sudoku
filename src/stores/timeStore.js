@@ -46,4 +46,9 @@ export const useTimeStore = defineStore("time", {
       this.startTimeStamp = null;
     },
   },
+  persist: {
+    key: "sudoku-time",
+    storage: localStorage,
+    paths: ["elapseSeconds", "isRunning"],
+  },
 });

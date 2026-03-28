@@ -146,7 +146,7 @@ const handleStartGame = (data) => {
 };
 
 const continueGame = () => {
-  if (store.hasSavedGame) {
+  if (store.hasSavedGame && !store.isCompleted) {
     store.isStarted = true;
     router.push("/game");
   }

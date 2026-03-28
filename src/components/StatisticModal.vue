@@ -5,104 +5,88 @@
       class="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[9999]"
       @click.self="close"
     >
-      <div
-        class="w-[420px] rounded-2xl p-8 bg-gradient-to-b from-[#0b2239] to-[#071829] border border-cyan-400/20 shadow-[0_0_40px_rgba(0,255,255,0.08)]"
-      >
-        <!-- TITLE -->
-        <div class="text-center mb-8">
-          <h2
-            class="text-2xl font-bold tracking-wider text-cyan-300 drop-shadow-[0_0_8px_rgba(0,255,255,0.7)]"
-          >
-            GAME STATISTICS
-          </h2>
-
-          <div class="w-16 h-[3px] bg-cyan-400 mx-auto mt-2 rounded"></div>
-        </div>
-
-        <!-- STAT LIST -->
-        <div class="space-y-5">
-          <!-- Total Games -->
-          <div
-            class="flex items-center justify-between bg-[#0f2a44] border border-cyan-400/10 rounded-xl px-4 py-4 hover:shadow-[0_0_12px_rgba(0,255,255,0.2)] transition"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="w-10 h-10 flex items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-300 text-lg"
-              >
-                <PuzzlePieceIcon></PuzzlePieceIcon>
-              </div>
-
-              <span class="text-slate-300">Total Games</span>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-slate-800/60 border border-slate-700 rounded-xl p-4 backdrop-blur-xl">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-slate-400 text-sm">Total Games</p>
+              <p class="text-3xl font-bold text-white">{{ store.totalGame }}</p>
+              <p class="text-slate-500 text-sm">{{ store.totalWin }} wins</p>
             </div>
-
-            <span
-              class="text-cyan-300 font-bold text-lg drop-shadow-[0_0_6px_rgba(0,255,255,0.7)]"
-            >
-              {{ store.totalGame ?? 0 }}
-            </span>
-          </div>
-
-          <!-- Time Played -->
-          <div
-            class="flex items-center justify-between bg-[#0f2a44] border border-cyan-400/10 rounded-xl px-4 py-4 hover:shadow-[0_0_12px_rgba(0,255,255,0.2)] transition"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="w-10 h-10 flex items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-300 text-lg"
-              >
-                <ClockIcon></ClockIcon>
-              </div>
-
-              <span class="text-slate-300">Time Played</span>
-            </div>
-
-            <span
-              class="text-cyan-300 font-bold text-lg drop-shadow-[0_0_6px_rgba(0,255,255,0.7)]"
-            >
-              {{ formatTime(store.totalTime) ?? 0 }}
-            </span>
-          </div>
-
-          <!-- Hints -->
-          <div
-            class="flex items-center justify-between bg-[#0f2a44] border border-cyan-400/10 rounded-xl px-4 py-4 hover:shadow-[0_0_12px_rgba(0,255,255,0.2)] transition"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="w-10 h-10 flex items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-300 text-lg"
-              >
-                <LightBulbIcon></LightBulbIcon>
-              </div>
-
-              <span class="text-slate-300">Hints Used</span>
-            </div>
-
-            <span
-              class="text-cyan-300 font-bold text-lg drop-shadow-[0_0_6px_rgba(0,255,255,0.7)]"
-            >
-              {{ store.totalHint ?? 0 }}
-            </span>
+            <PuzzlePieceIcon class="w-6 h-6 text-cyan-300" />
           </div>
         </div>
 
-        <!-- BUTTON -->
-        <button
-          @click="close"
-          class="mt-8 w-full py-3 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-400 text-black font-semibold tracking-wider hover:brightness-110 transition"
-        >
-          Quay lại
-        </button>
+        <div class="bg-slate-800/60 border border-slate-700 rounded-xl p-4 backdrop-blur-xl">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-slate-400 text-sm">Time Played</p>
+              <p class="text-3xl font-bold text-white">{{ formatTime(store.totalTime) }}</p>
+              <p class="text-slate-500 text-sm">all time</p>
+            </div>
+            <ClockIcon class="w-6 h-6 text-cyan-300" />
+          </div>
+        </div>
+
+        <div class="bg-slate-800/60 border border-slate-700 rounded-xl p-4 backdrop-blur-xl col-span-2 flex justify-between items-center">
+          <div class="flex items-center gap-4">
+            <div
+              class="w-14 h-14 rounded-xl bg-yellow-500/20 flex items-center justify-center"
+            >
+              <LightBulbIcon class="w-6 h-6 text-yellow-400" />
+            </div>
+
+            <div>
+              <p class="text-slate-400 text-sm">Total Hints Used</p>
+              <p class="text-3xl font-bold text-white">{{ store.totalHint }}</p>
+              <p class="text-slate-500 text-sm">avg {{ store.overallWinRate }} hints / game</p>
+            </div>
+          </div>
+
+          <div class="space-y-2 w-32">
+            <Bar label="E" color="bg-green-500" :value="30" />
+            <Bar label="M" color="bg-yellow-400" :value="60" />
+            <Bar label="H" color="bg-orange-500" :value="90" />
+          </div>
+        </div>
+
+        <div class="bg-slate-800/60 border border-slate-700 rounded-xl p-4 backdrop-blur-xl col-span-2 flex items-center gap-6">
+          <ProgressRing :percent="winRate" />
+
+          <div>
+            <p class="text-xl font-semibold text-white">Win Rate</p>
+            <p class="text-slate-400">
+              {{ store.totalWin }} wins out of {{ store.totalGame }} games
+            </p>
+
+            <div class="flex gap-4 mt-2">
+              <span class="text-green-400">✔ {{ store.totalWin }}</span>
+              <span class="text-red-400"
+                >✖ {{ store.totalGame - store.totalWin }}</span
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </Teleport>
 </template>
+
 <script setup>
+import { computed } from "vue";
 import { useGameStore } from "../stores/gameStore";
-import { PuzzlePieceIcon, ClockIcon, LightBulbIcon } from "@heroicons/vue/24/outline";
+import ProgressRing from "../components/ProgressRing.vue";
+import Bar from "../components/Bar.vue";
+
+import {
+  PuzzlePieceIcon,
+  ClockIcon,
+  LightBulbIcon,
+} from "@heroicons/vue/24/outline";
 
 const store = useGameStore();
 
-const prop = defineProps({
+const props = defineProps({
   modelValue: Boolean,
 });
 
@@ -110,11 +94,15 @@ const emit = defineEmits(["update:modelValue"]);
 
 const close = () => emit("update:modelValue", false);
 
+const winRate = computed(() => {
+  if (!store.totalGame) return 0;
+  return Math.round((store.totalWin / store.totalGame) * 100);
+});
+
 function formatTime(seconds) {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = seconds % 60;
-
   return [h, m, s].map((v) => v.toString().padStart(2, "0")).join(":");
 }
 </script>

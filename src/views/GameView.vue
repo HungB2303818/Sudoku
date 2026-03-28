@@ -79,7 +79,7 @@
           </div>
         </div>
 
-        <!-- RIGHT PANEL: co giãn theo board -->
+        <!-- RIGHT PANEL -->
         <div
           class="flex flex-col flex-1 min-w-0 gap-3 sm:gap-3 lg:gap-6 max-w-[200px] sm:max-w-[220px] lg:max-w-[260px] xl:max-w-[300px]"
         >
@@ -115,6 +115,17 @@
             </button>
 
             <button
+              @click="ui.toggleNoteMode()"
+              :class="
+                ui.noteMode
+                  ? 'flex-1 h-9 sm:h-10 lg:h-12 flex items-center justify-center rounded-full bg-slate-700 hover:bg-slate-600 transition active:scale-95 text-yellow-300'
+                  : 'flex-1 h-9 sm:h-10 lg:h-12 flex items-center justify-center rounded-full bg-slate-700 hover:bg-slate-600 transition active:scale-95'
+              "
+            >
+              <PencilIcon class="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7" />
+            </button>
+
+            <button
               @click="store.hint()"
               class="relative flex-1 h-9 sm:h-10 lg:h-12 flex items-center justify-center rounded-full bg-slate-700 hover:bg-slate-600 transition active:scale-95"
             >
@@ -133,7 +144,7 @@
               v-for="num in 9"
               :key="num"
               @click="inputNumber(num)"
-              class="aspect-square bg-slate-700 hover:bg-slate-600 rounded-md sm:rounded-lg text-base sm:text-lg lg:text-2xl font-semibold transition active:scale-95 flex items-center justify-center"
+              class="aspect-square bg-slate-700 hover:bg-slate-600 rounded-md sm:rounded-lg text-base sm:text-2xl lg:text-2xl transition active:scale-95 flex items-center justify-center"
             >
               {{ num }}
             </button>
@@ -149,23 +160,26 @@
         </div>
       </div>
 
-      <WinModal :showWin="store.isCompleted" />
+      <WinModal v-model:showWin="showWinModal" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "../stores/gameStore";
 import { useTimeStore } from "../stores/timeStore";
 import { useUIStore } from "../stores/uiStore";
 
+import {} from "@heroicons/vue/24/outline";
+
 import {
   ArrowUturnLeftIcon,
-  BackspaceIcon,
   LightBulbIcon,
-} from "@heroicons/vue/24/outline";
+  BackspaceIcon,
+  PencilIcon,
+} from "@heroicons/vue/24/solid";
 
 import SudokuBoard from "../components/SudokuBoard.vue";
 import GuideModal from "../components/GuideModal.vue";
@@ -175,7 +189,18 @@ const showGuide = ref(false);
 const router = useRouter();
 const store = useGameStore();
 const time = useTimeStore();
+const showWinModal = ref(false);
 const ui = useUIStore();
+
+watch(
+  () => store.isCompleted,
+  (completed) => {
+    if (completed) {
+      showWinModal.value = true;
+      time.stopTimer();
+    }
+  },
+);
 
 onMounted(() => {
   if (!store.isStarted && !store.isCompleted) {
@@ -183,7 +208,7 @@ onMounted(() => {
     return;
   }
 
-  if (!time.isRunning && !store.isCompleted) {
+  if (!time.isRunning && !store.checkCompletion()) {
     time.startTimer();
   }
 });
@@ -193,25 +218,30 @@ const goBack = () => {
 };
 
 function solveGame() {
+  confirm("are you sure?");
   const result = store.autoSolve();
-
   if (result?.type === "STOP_TIMER") {
+    store.recordWin(time.elapsedSeconds, store.hintCount);
     time.stopTimer();
   }
 }
 const inputNumber = (num) => {
+  if (store.checkCompletion()) return;
+
   const row = ui.selectedRow;
   const col = ui.selectedCol;
 
   if (row === null || col === null) return;
-
-  // không sửa ô ban đầu
   if (store.initialGrid[row][col] !== 0) return;
 
   if (ui.noteMode) {
     store.toggleNote(row, col, num);
   } else {
-    store.updateCell(row, col, num);
+    const isWin = store.updateCell(row, col, num);
+    if (isWin) {
+      time.stopTimer();
+      store.recordWin(time.elapsedSeconds, store.hintCount);
+    }
   }
 };
 </script>

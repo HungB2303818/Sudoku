@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <div
-      v-if="store.isCompleted"
+      v-if="showWin"
       @click.self="close"
       class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999]"
     >
@@ -78,7 +78,8 @@ defineProps({
 const store = useGameStore();
 const time = useTimeStore();
 
+const emit = defineEmits(['update:showWin']);
 const close = () => {
-  store.isCompleted = false;
+  emit('update:showWin', false);
 };
 </script>

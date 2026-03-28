@@ -49,10 +49,10 @@ const emit = defineEmits(["update:modelValue"]);
 const errors = ref(Array.from({ length: 9 }, () => Array(9).fill(false)));
 
 const getBorderClasses = (r, c) => {
-  // Đường kẻ mặc định cực mảnh và mờ
+  // Đường kẻ mặc định mảnh và mờ
   let classes = "border-[0.5px] border-cyan-900/20";
 
-  // Đường kẻ phân chia khối 3x3 (Sáng hơn một chút để phân biệt nhưng không dày)
+  // Đường kẻ phân chia khối 3x3
   if ((r + 1) % 3 === 0 && r < 8)
     classes += " border-b-[2px] border-b-cyan-700/40";
   if ((c + 1) % 3 === 0 && c < 8)
@@ -112,7 +112,7 @@ const inputNumber = (num) => {
 
   store.updateCell(r, c, num);
 };
-// Watch grid changes
+
 watch(
   () => props.modelValue,
   () => validateBoard(),
