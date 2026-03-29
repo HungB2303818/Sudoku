@@ -27,7 +27,7 @@
             />
           </svg>
         </button>
-        <div class="flex bg-[#1f2644] p-1 rounded-2xl mb-8 relative">
+        <div class="flex bg-[#1f2644] p-1 rounded-2xl mb-8 mt-4 relative">
           <button
             v-for="tab in tabs"
             :key="tab.id"
@@ -48,7 +48,7 @@
         </div>
         <div
           v-if="activeTab === 'overview'"
-          class="space-y-6 max-h-[75vh] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full"
+          class="space-y-6 max-h-[65vh] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full"
         >
           <div
             class="bg-slate-800/60 border border-slate-700 rounded-xl p-4 backdrop-blur-xl"
@@ -131,22 +131,19 @@
         <!-- DIFFICULTY -->
         <div
           v-if="activeTab === 'difficulty'"
-          class="space-y-6 max-h-[75vh] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full"
+          class="space-y-6 max-h-[65vh] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full"
         >
           <div
             v-for="level in difficultyLevels"
             :key="level.key"
-            class="bg-[#1f2644]/40 border rounded-[2rem] p-5 relative overflow-hidden transition-all duration-300 hover:bg-[#1f2644]/60"
+            class="bg-[#1f2644]/40 border rounded-[2rem] p-5 relative overflow-hidden transition-all duration-300 hover:bg-[#1f2644]/60 shadow-xl"
             :style="{ borderColor: `rgba(${level.rgb}, 0.2)` }"
           >
             <div class="flex justify-between items-center mb-6">
               <div class="flex items-center gap-3">
                 <div
                   class="w-2.5 h-2.5 rounded-full shadow-[0_0_10px]"
-                  :class="[
-                    `bg-${level.color}-500`,
-                    `shadow-${level.color}-500/80`,
-                  ]"
+                  :class="[level.colorClass, level.shadowClass]"
                 ></div>
                 <h3 class="text-white text-xl font-bold tracking-tight">
                   {{ level.label }}
@@ -163,7 +160,7 @@
               >
                 <TrophyIcon
                   class="w-5 h-5 mx-auto mb-2 opacity-70 group-hover:opacity-100"
-                  :class="`text-${level.color}-400`"
+                  :class="level.textClass"
                 />
                 <p class="text-2xl font-bold text-white">
                   {{ getLevelWinRate(level.key) }}%
@@ -180,7 +177,7 @@
               >
                 <ClockIcon
                   class="w-5 h-5 mx-auto mb-2 opacity-70 group-hover:opacity-100"
-                  :class="`text-${level.color}-400`"
+                  :class="level.textClass"
                 />
                 <p class="text-2xl font-bold text-white">
                   {{ getLevelAvgTime(level.key) }}
@@ -197,7 +194,7 @@
               >
                 <LightBulbIcon
                   class="w-5 h-5 mx-auto mb-2 opacity-70 group-hover:opacity-100"
-                  :class="`text-${level.color}-400`"
+                  :class="level.textClass"
                 />
                 <p class="text-2xl font-bold text-white">
                   {{ store.stats[level.key].totalHint }}
@@ -215,7 +212,7 @@
                 class="flex justify-between text-[11px] font-bold uppercase tracking-wider"
               >
                 <span class="text-slate-500">Win rate progress</span>
-                <span :class="`text-${level.color}-400`"
+                <span :class="[level.textClass]"
                   >{{ getLevelWinRate(level.key) }}%</span
                 >
               </div>
@@ -224,10 +221,7 @@
               >
                 <div
                   class="h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_12px]"
-                  :class="[
-                    `bg-${level.color}-500`,
-                    `shadow-${level.color}-500/40`,
-                  ]"
+                  :class="[level.colorClass, level.shadowClass, level.textClass]"
                   :style="{ width: `${getLevelWinRate(level.key)}%` }"
                 ></div>
               </div>
@@ -249,7 +243,7 @@ import {
   PuzzlePieceIcon,
   ClockIcon,
   LightBulbIcon,
-  TrophyIcon
+  TrophyIcon,
 } from "@heroicons/vue/24/outline";
 
 const store = useGameStore();
@@ -273,9 +267,30 @@ const winRate = computed(() => {
 });
 // Cấu hình UI cho các cấp độ (không chứa dữ liệu logic)
 const difficultyLevels = [
-  { key: "easy", label: "Easy", color: "emerald", rgb: "16, 185, 129" },
-  { key: "medium", label: "Medium", color: "amber", rgb: "245, 158, 11" },
-  { key: "hard", label: "Hard", color: "orange", rgb: "249, 115, 22" },
+  {
+    key: "easy",
+    label: "Easy",
+    colorClass: "bg-emerald-500",
+    shadowClass: "shadow-emerald-500/80",
+    textClass: "text-emerald-400",
+    rgb: "16, 185, 129",
+  },
+  {
+    key: "medium",
+    label: "Medium",
+    colorClass: "bg-amber-500",
+    shadowClass: "shadow-amber-500/80",
+    textClass: "text-amber-400",
+    rgb: "245, 158, 11",
+  },
+  {
+    key: "hard",
+    label: "Hard",
+    colorClass: "bg-red-500",
+    shadowClass: "shadow-red-500",
+    textClass: "text-red-400",
+    rgb: "249, 115, 22",
+  },
 ];
 
 // Hàm tính Win Rate nhanh cho từng cấp độ (vì getter store chỉ tính overall)
