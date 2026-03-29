@@ -14,16 +14,8 @@ const PREVIEW_GRID = [
   [0,0,0,0,8,0,0,7,9],
 ];
 
-// (tuỳ chọn) random nhẹ cho preview sinh động hơn
 const grid = computed(() => {
-  return PREVIEW_GRID.map(row =>
-    row.map(cell => {
-      if (cell === 0 && Math.random() > 0.8) {
-        return Math.floor(Math.random() * 9) + 1;
-      }
-      return cell;
-    })
-  );
+  return PREVIEW_GRID.map(row => [...row]);
 });
 
 // border phải
