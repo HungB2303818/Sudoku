@@ -10,11 +10,11 @@
       >
         <button
           @click="close"
-          class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 transition-all active:scale-90 z-50"
+          class="absolute top-2 right-3 w-8 h-8 rounded-full text-slate-400 hover:text-white transition-all flex items-center justify-center text-slate-400"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="w-4 h-4"
+            class="w-5 h-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
