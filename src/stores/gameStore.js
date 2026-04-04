@@ -21,7 +21,7 @@ export const useGameStore = defineStore("game", {
     stats: {
       easy: { totalWin: 0, totalGame: 0, totalTime: 0, totalHint: 0 },
       medium: { totalWin: 0, totalGame: 0, totalTime: 0, totalHint: 0 },
-      hard: { totalWin: 0, totalGame: 0, totalTime: 0, totalHint: 0 },
+      hard: { totalWin: 0, totalGame: 0, totalTime: 0, totalHint: 0, },
     },
 
     difficulty: "",
@@ -237,7 +237,6 @@ export const useGameStore = defineStore("game", {
 
     undo() {
       if (!this.history.length) return;
-
       const last = this.history.pop();
       this.gameGrid[last.row][last.col] = last.prevValue;
 
@@ -253,10 +252,10 @@ export const useGameStore = defineStore("game", {
     //HINT
     hint() {
       if (this.hintCount >= this.maxHints) return;
-
       const hint = getHint(this.gameGrid, this.solution);
       if (!hint) return;
-
+      this.hintCount++;
+      console.log(this.hintCount);
       this.updateCell(hint.row, hint.col, hint.value);
 
       this.lastHint = { row: hint.row, col: hint.col };

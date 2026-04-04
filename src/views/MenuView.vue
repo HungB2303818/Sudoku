@@ -28,7 +28,7 @@
           SUDOKU
         </h1>
       </div>
-      <div class="flex flex-col space-y-4 w-85 p-4 rounded-3xl">
+      <div class="flex flex-col space-y-4 w-75 p-4 rounded-3xl">
         <!-- START GAME -->
         <button
           @click="showMode = true"
@@ -46,7 +46,7 @@
               </div>
 
               <div class="text-left">
-                <div class="text-white font-semibold text-lg">
+                <div class="text-white font-semibold text-base">
                   Start New Game
                 </div>
                 <div class="text-white/80 text-sm">Choose difficulty</div>
@@ -79,7 +79,7 @@
               </div>
 
               <div class="text-left">
-                <div class="text-white font-semibold text-lg">
+                <div class="text-white font-semibold text-base">
                   Continue Game
                 </div>
                 <div class="text-white/80 text-sm">
@@ -138,7 +138,7 @@ const handleStartGame = (data) => {
   store.startNewGame(level.value);
 
   ui.clearSelection();
-
+  ui.noteMode = false;
   time.resetTimer();
   time.startTimer();
 
