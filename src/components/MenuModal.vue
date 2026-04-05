@@ -2,64 +2,103 @@
   <Teleport to="body">
     <div
       v-if="modelValue"
-      class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999]"
+      class="fixed inset-0 flex items-center justify-center z-[9999]"
+      style="background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(8px)"
       @click.self="close"
     >
       <div
-        class="w-[340px] rounded-2xl p-6 bg-gradient-to-b from-slate-900 to-slate-800 border border-slate-700 shadow-2xl"
+        class="difficulty-modal w-[360px] rounded-2xl p-7"
+        style="
+          background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+          border: 1px solid rgba(148, 163, 184, 0.12);
+          box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.04) inset;
+        "
       >
-        <!-- title -->
-        <h2 class="text-center text-lg font-semibold text-slate-200 mb-6">
-          Chọn độ khó
-        </h2>
+        <!-- Header -->
+        <div class="text-center mb-7">
+          <p class="text-xs font-semibold tracking-[0.2em] uppercase text-slate-500 mb-1">Sudoku</p>
+          <h2 class="text-xl font-bold text-slate-100">Chọn độ khó</h2>
+        </div>
 
         <!-- EASY -->
         <button
           @click="handleClick('easy')"
-          class="w-full flex items-center gap-4 p-4 mb-3 rounded-xl border border-slate-700 hover:bg-slate-800 transition"
+          class="difficulty-btn w-full flex items-center gap-4 p-4 mb-3 rounded-xl transition-all duration-200"
+          style="
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.15) 100%);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+          "
+          @mouseenter="e => applyHover(e, 'easy')"
+          @mouseleave="e => removeHover(e, 'easy')"
         >
-          <div class="text-left">
-            <p class="font-semibold text-green-400">Easy</p>
-            <p class="text-sm text-slate-400">Nhiều gợi ý, ít ô trống hơn</p>
+          <div
+            class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
+            style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 0 16px rgba(16,185,129,0.4)"
+          >
+
           </div>
+          <div class="text-left flex-1">
+            <p class="font-bold text-emerald-400 text-sm tracking-wide">EASY</p>
+            <p class="text-xs text-slate-400 mt-0.5">Nhiều gợi ý · Ít ô trống</p>
+          </div>
+          <span class="text-emerald-600 text-sm">›</span>
         </button>
 
         <!-- MEDIUM -->
         <button
           @click="handleClick('medium')"
-          class="w-full flex items-center gap-4 p-4 mb-3 rounded-xl border border-slate-700 hover:bg-slate-800 transition"
+          class="difficulty-btn w-full flex items-center gap-4 p-4 mb-3 rounded-xl transition-all duration-200"
+          style="
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(120, 53, 15, 0.15) 100%);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+          "
+          @mouseenter="e => applyHover(e, 'medium')"
+          @mouseleave="e => removeHover(e, 'medium')"
         >
-          <div class="text-left">
-            <p class="font-semibold text-yellow-400">Medium</p>
-            <p class="text-sm text-slate-400">
-              Thử thách cân bằng cho người chơi
-            </p>
+          <div
+            class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
+            style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 0 16px rgba(245,158,11,0.4)"
+          >
           </div>
+          <div class="text-left flex-1">
+            <p class="font-bold text-amber-400 text-sm tracking-wide">MEDIUM</p>
+            <p class="text-xs text-slate-400 mt-0.5">Cân bằng · Thử thách vừa phải</p>
+          </div>
+          <span class="text-amber-600 text-sm">›</span>
         </button>
 
         <!-- HARD -->
         <button
           @click="handleClick('hard')"
-          class="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-700 hover:bg-slate-800 transition"
+          class="difficulty-btn w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200"
+          style="
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(127, 29, 29, 0.15) 100%);
+            border: 1px solid rgba(252, 165, 165, 0.2);
+          "
+          @mouseenter="e => applyHover(e, 'hard')"
+          @mouseleave="e => removeHover(e, 'hard')"
         >
-
-          <div class="text-left">
-            <p class="font-semibold text-red-400">Hard</p>
-            <p class="text-sm text-slate-400">
-              Ít gợi ý, đề bài phức tạp
-            </p>
+          <div
+            class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
+            style="background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 0 16px rgba(239,68,68,0.4)"
+          >
           </div>
+          <div class="text-left flex-1">
+            <p class="font-bold text-red-400 text-sm tracking-wide">HARD</p>
+            <p class="text-xs text-slate-400 mt-0.5">Ít gợi ý · Đề bài phức tạp</p>
+          </div>
+          <span class="text-red-700 text-sm">›</span>
         </button>
 
-        <!-- divider -->
-        <div class="border-t border-slate-700 my-6"></div>
+        <!-- Divider -->
+        <div class="my-6" style="height: 1px; background: linear-gradient(90deg, transparent, rgba(148,163,184,0.15), transparent)"></div>
 
-        <!-- cancel -->
+        <!-- Cancel -->
         <button
           @click="close"
-          class="w-full text-slate-400 hover:text-slate-200 font-semibold tracking-widest text-sm"
+          class="w-full py-2 text-slate-500 hover:text-slate-300 text-xs font-semibold tracking-[0.15em] uppercase transition-colors duration-150"
         >
-          Hủy 
+          Hủy bỏ
         </button>
       </div>
     </div>
@@ -77,4 +116,50 @@ const handleClick = (level) => {
   emit("handleStartGame", level);
 };
 const close = () => emit("update:modelValue", false);
+
+const hoverStyles = {
+  easy: {
+    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 78, 59, 0.25) 100%)',
+    border: '1px solid rgba(52, 211, 153, 0.4)',
+    boxShadow: '0 0 20px rgba(16,185,129,0.12)',
+  },
+  medium: {
+    background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(120, 53, 15, 0.25) 100%)',
+    border: '1px solid rgba(251, 191, 36, 0.4)',
+    boxShadow: '0 0 20px rgba(245,158,11,0.12)',
+  },
+  hard: {
+    background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(127, 29, 29, 0.25) 100%)',
+    border: '1px solid rgba(252, 165, 165, 0.4)',
+    boxShadow: '0 0 20px rgba(239,68,68,0.12)',
+  },
+}
+
+const defaultStyles = {
+  easy: {
+    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.15) 100%)',
+    border: '1px solid rgba(52, 211, 153, 0.2)',
+    boxShadow: 'none',
+  },
+  medium: {
+    background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(120, 53, 15, 0.15) 100%)',
+    border: '1px solid rgba(251, 191, 36, 0.2)',
+    boxShadow: 'none',
+  },
+  hard: {
+    background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(127, 29, 29, 0.15) 100%)',
+    border: '1px solid rgba(252, 165, 165, 0.2)',
+    boxShadow: 'none',
+  },
+}
+
+function applyHover(e, mode) {
+  const s = hoverStyles[mode]
+  Object.assign(e.currentTarget.style, s)
+}
+
+function removeHover(e, mode) {
+  const s = defaultStyles[mode]
+  Object.assign(e.currentTarget.style, s)
+}
 </script>

@@ -137,7 +137,9 @@
             v-for="level in difficultyLevels"
             :key="level.key"
             class="bg-[#1f2644]/40 border rounded-[2rem] p-5 relative overflow-hidden transition-all duration-300 hover:bg-[#1f2644]/60 shadow-xl"
-            :style="{ borderColor: `rgba(${level.rgb}, 0.2)` }"
+            :style="{
+              background: level.background,
+              borderColor: `rgba(${level.rgb}, 0.2)` }"
           >
             <div class="flex justify-between items-center mb-6">
               <div class="flex items-center gap-3">
@@ -270,6 +272,7 @@ const difficultyLevels = [
   {
     key: "easy",
     label: "Easy",
+    background: "linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.15) 100%)",
     colorClass: "bg-emerald-500",
     shadowClass: "shadow-emerald-500/80",
     textClass: "text-emerald-400",
@@ -278,6 +281,7 @@ const difficultyLevels = [
   {
     key: "medium",
     label: "Medium",
+    background: "linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(120, 53, 15, 0.15) 100%)",
     colorClass: "bg-amber-500",
     shadowClass: "shadow-amber-500/80",
     textClass: "text-amber-400",
@@ -286,6 +290,7 @@ const difficultyLevels = [
   {
     key: "hard",
     label: "Hard",
+    background: "linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(127, 29, 29, 0.15) 100%)",
     colorClass: "bg-red-500",
     shadowClass: "shadow-red-500",
     textClass: "text-red-400",
