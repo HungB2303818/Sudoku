@@ -40,6 +40,8 @@ export const useGameStore = defineStore("game", {
     lastHint: null,
     hintCount: 0,
     maxHints: 0,
+
+    isSolvedBySystem: false,
   }),
 
   getters: {
@@ -144,9 +146,10 @@ export const useGameStore = defineStore("game", {
       const solved = solveBoard(this.gameGrid);
 
       if (solved) {
+        this.isSolvedBySystem = true;
         this.gameGrid = solved;
-        this.isCompleted = true;
         this.isValidBoard = true;
+        this.isCompleted = true;
         return { type: "STOP_TIMER" };
       }
     },
@@ -166,10 +169,13 @@ export const useGameStore = defineStore("game", {
 
     recordWin(timeSpent, hintsUsed) {
       const s = this.stats[this.difficulty];
-      s.totalWin++;
-      s.totalTime += timeSpent;
-      s.totalHint += hintsUsed;
+       if (!this.isSolvedBySystem) {
+         s.totalWin++;
+         s.totalTime += timeSpent;
+         s.totalHint += hintsUsed;
+       }
       this.isCompleted = true;
+      this.isSolvedBySystem = false;
       console.log(`Đã lưu kỷ lục: ${this.difficulty}`, s);
     },
     resetStats() {

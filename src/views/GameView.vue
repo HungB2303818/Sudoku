@@ -20,8 +20,8 @@
         <!-- RIGHT -->
         <div class="flex items-center gap-3 sm:gap-4 lg:gap-6">
           <button @click="showGuide = true" class="w-8 h-8">
-          <BookOpenIcon></BookOpenIcon>
-        </button>
+            <BookOpenIcon></BookOpenIcon>
+          </button>
 
           <div class="text-right">
             <p
@@ -134,7 +134,7 @@
 
           <!-- SOLVE BUTTON -->
           <button
-            @click="solveGame"
+            @click="showSolveModal = true"
             class="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-2 sm:py-2.5 lg:py-3 rounded-lg sm:rounded-xl font-bold text-white shadow-lg transition active:scale-95 text-xs sm:text-sm lg:text-base"
           >
             GIẢI VÉT CẠN
@@ -143,6 +143,11 @@
       </div>
 
       <WinModal v-model:showWin="showWinModal" />
+      <ConfirmModal
+        :is-open="showSolveModal"
+        @cancel="showSolveModal = false"
+        @confirm="handleSolveConfirmed"
+      />
     </div>
   </div>
 </template>
@@ -162,12 +167,12 @@ import {
   BackspaceIcon,
   PencilIcon,
 } from "@heroicons/vue/24/solid";
-import {
-  BookOpenIcon
-} from "@heroicons/vue/24/outline";
+
+import { BookOpenIcon } from "@heroicons/vue/24/outline";
 import SudokuBoard from "../components/SudokuBoard.vue";
 import GuideModal from "../components/GuideModal.vue";
 import WinModal from "../components/WinModal.vue";
+import ConfirmModal from "../components/ConfirmModal.vue";
 
 const showGuide = ref(false);
 const router = useRouter();
@@ -175,13 +180,15 @@ const store = useGameStore();
 const time = useTimeStore();
 const showWinModal = ref(false);
 const ui = useUIStore();
-
+const showSolveModal = ref(false);
 watch(
   () => store.isCompleted,
   (completed) => {
     if (completed) {
-      showWinModal.value = true;
       time.stopTimer();
+      if (!store.isSolvedBySystem) {
+        showWinModal.value = true;
+      }
     }
   },
 );
@@ -201,14 +208,6 @@ const goBack = () => {
   time.stopTimer();
 };
 
-function solveGame() {
-  confirm("are you sure?");
-  const result = store.autoSolve();
-  if (result?.type === "STOP_TIMER") {
-    store.recordWin(time.elapsedSeconds, store.hintCount);
-    time.stopTimer();
-  }
-}
 const inputNumber = (num) => {
   if (store.checkCompletion()) return;
 
@@ -228,4 +227,9 @@ const inputNumber = (num) => {
     }
   }
 };
+function handleSolveConfirmed() {
+  showSolveModal.value = false;
+  store.autoSolve();
+  // store.recordWin(time.elapsedSeconds, store.hintCount);
+}
 </script>
