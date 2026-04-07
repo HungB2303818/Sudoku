@@ -7,16 +7,16 @@
       class="w-full max-w-2xl xl:max-w-3xl flex flex-col items-center gap-6 xl:gap-16 px-8"
     >
       <!-- Header -->
-      <div class="flex justify-between items-center w-full px-15">
+      <div class="flex justify-between items-center w-full px-5">
         <button
           @click="showStatistic = true"
-          class="w-10 h-10 rounded-xl border border-white/10 bg-white/[0.04] flex items-center justify-center transition-all hover:bg-white/[0.09] hover:border-white/20 active:scale-95"
+          class="w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:bg-white/[0.09] hover:border-white/20 active:scale-95"
         >
           <ChartBarIcon></ChartBarIcon>
         </button>
 
         <button @click="showGuide = true" class="w-10 h-10">
-          <QuestionMarkCircleIcon></QuestionMarkCircleIcon>
+          <BookOpenIcon></BookOpenIcon>
         </button>
       </div>
       <div class="text-center space-y-4 flex flex-col items-center">
@@ -122,6 +122,7 @@ import BackgroundNumber from "../components/BackGroundNumber.vue";
 import {
   ChartBarIcon,
   QuestionMarkCircleIcon,
+  BookOpenIcon
 } from "@heroicons/vue/24/outline";
 
 const router = useRouter();

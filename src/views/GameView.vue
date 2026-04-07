@@ -3,7 +3,7 @@
     <div class="w-full flex flex-col flex-1 min-h-0">
       <!-- HEADER -->
       <div
-        class="w-full px-6 sm:px-6 lg:px-10 pt-4 lg:pt-6 flex justify-between items-center flex-shrink-0"
+        class="w-full px-6 sm:px-15 lg:px-10 pt-4 lg:pt-6 flex justify-between items-center flex-shrink-0"
       >
         <!-- LEFT -->
         <button
@@ -14,30 +14,14 @@
             class="group-hover:-translate-x-1 transition-transform text-sm lg:text-base"
             >←</span
           >
-          <span class="text-sm lg:text-base">Thoát</span>
+          <span class="text-base lg:text-base">Thoát</span>
         </button>
 
         <!-- RIGHT -->
         <div class="flex items-center gap-3 sm:gap-4 lg:gap-6">
-          <button
-            @click="showGuide = true"
-            class="bg-slate-700 hover:bg-slate-600 p-1.5 sm:p-2 rounded-lg transition"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z"
-              />
-            </svg>
-          </button>
+          <button @click="showGuide = true" class="w-8 h-8">
+          <BookOpenIcon></BookOpenIcon>
+        </button>
 
           <div class="text-right">
             <p
@@ -63,11 +47,9 @@
 
       <GuideModal v-model="showGuide" />
 
-      <!-- MAIN CONTENT: luôn ngang, căn giữa theo chiều dọc -->
       <div
         class="flex-1 flex flex-row items-center justify-center gap-8 px-6 py-4 min-h-0"
       >
-        <!-- BOARD: vuông, chiếm hết chiều cao khả dụng -->
         <div class="flex-shrink-0 flex items-center justify-center h-full">
           <div class="h-full aspect-square max-h-full">
             <SudokuBoard
@@ -180,7 +162,9 @@ import {
   BackspaceIcon,
   PencilIcon,
 } from "@heroicons/vue/24/solid";
-
+import {
+  BookOpenIcon
+} from "@heroicons/vue/24/outline";
 import SudokuBoard from "../components/SudokuBoard.vue";
 import GuideModal from "../components/GuideModal.vue";
 import WinModal from "../components/WinModal.vue";
