@@ -64,11 +64,16 @@
 
         <!-- CONTINUE -->
         <button
-          @click="continueGame"
+          @click="!store.isCompleted && continueGame()"
           class="group relative overflow-hidden rounded-2xl"
         >
           <div
-            class="flex items-center justify-between rounded-2xl px-5 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all duration-300"
+            class="flex items-center justify-between rounded-2xl px-5 py-4 transition-all duration-300"
+            :class="
+              store.isCompleted
+                ? 'bg-gradient-to-r from-gray-800 via-gray-700 to-gray-600'
+                : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500'
+            "
           >
             <!-- LEFT -->
             <div class="flex items-center gap-4">
@@ -79,10 +84,13 @@
               </div>
 
               <div class="text-left">
-                <div class="text-white font-semibold text-base">
+                <div
+                  class="font-semibold text-base"
+                  :class="!store.isCompleted ? 'text-white' : 'text-slate-300'"
+                >
                   Continue Game
                 </div>
-                <div class="text-white/80 text-sm">
+                <div v-if="!store.isCompleted" class="text-white/80 text-sm">
                   {{ store.difficulty ?? "" }} - {{ time.formattedTime }}
                 </div>
               </div>
@@ -122,7 +130,7 @@ import BackgroundNumber from "../components/BackGroundNumber.vue";
 import {
   ChartBarIcon,
   QuestionMarkCircleIcon,
-  BookOpenIcon
+  BookOpenIcon,
 } from "@heroicons/vue/24/outline";
 
 const router = useRouter();
