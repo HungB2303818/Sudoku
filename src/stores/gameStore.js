@@ -21,7 +21,7 @@ export const useGameStore = defineStore("game", {
     stats: {
       easy: { totalWin: 0, totalGame: 0, totalTime: 0, totalHint: 0 },
       medium: { totalWin: 0, totalGame: 0, totalTime: 0, totalHint: 0 },
-      hard: { totalWin: 0, totalGame: 0, totalTime: 0, totalHint: 0, },
+      hard: { totalWin: 0, totalGame: 0, totalTime: 0, totalHint: 0 },
     },
 
     difficulty: "",
@@ -169,11 +169,11 @@ export const useGameStore = defineStore("game", {
 
     recordWin(timeSpent, hintsUsed) {
       const s = this.stats[this.difficulty];
-       if (!this.isSolvedBySystem) {
-         s.totalWin++;
-         s.totalTime += timeSpent;
-         s.totalHint += hintsUsed;
-       }
+      if (!this.isSolvedBySystem) {
+        s.totalWin++;
+        s.totalTime += timeSpent;
+        s.totalHint += hintsUsed;
+      }
       this.isCompleted = true;
       this.isSolvedBySystem = false;
       console.log(`Đã lưu kỷ lục: ${this.difficulty}`, s);
@@ -227,6 +227,9 @@ export const useGameStore = defineStore("game", {
     //Helper
     removeNote(row, col, value) {
       this.notes[row][col] = this.notes[row][col].filter((v) => v !== value);
+    },
+    clearNotes(row, col) {
+      this.notes[row][col] = [];
     },
     loadGame(data) {
       this.$patch({
@@ -309,7 +312,7 @@ export const useGameStore = defineStore("game", {
       "isRunning",
       "isCompleted",
       "hintCount",
-      "maxHints"
+      "maxHints",
     ],
     afterRestore: ({ store }) => {
       const hasGame = store.gameGrid.flat().some((v) => v !== 0);

@@ -19,13 +19,16 @@
 
         <!-- RIGHT -->
         <div class="flex items-center gap-3 sm:gap-4 lg:gap-6">
-          <button @click="showGuide = true" class="w-8 h-8">
-            <BookOpenIcon></BookOpenIcon>
+          <button
+            @click="showGuide = true"
+            class="w-9 h-9 flex items-center justify-center rounded-lg transition duration-200 hover:bg-white/10 hover:scale-110"
+          >
+            <BookOpenIcon class="w-8 h-8"></BookOpenIcon>
           </button>
 
           <div class="text-right">
             <p
-              class="text-[9px] sm:text-[10px] text-slate-500 uppercase font-black tracking-widest"
+              class="relative font-sans text-[9px] sm:text-sm text-slate-500 uppercase font-black tracking-widest"
             >
               Độ khó
             </p>
@@ -131,8 +134,6 @@
               {{ num }}
             </button>
           </div>
-
-          <!-- SOLVE BUTTON -->
           <button
             @click="showSolveModal = true"
             class="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-2 sm:py-2.5 lg:py-3 rounded-lg sm:rounded-xl font-bold text-white shadow-lg transition active:scale-95 text-xs sm:text-sm lg:text-base"
@@ -217,6 +218,18 @@ const inputNumber = (num) => {
   if (row === null || col === null) return;
   if (store.initialGrid[row][col] !== 0) return;
 
+  if (num === 0) {
+    if (ui.noteMode) {
+      if (ui.selectedNumber) {
+        store.removeNote(row, col, ui.selectedNumber);
+      } else {
+        store.clearNotes(row, col);
+      }
+    } else {
+      store.updateCell(row, col, 0);
+    }
+    return;
+  }
   if (ui.noteMode) {
     store.toggleNote(row, col, num);
   } else {

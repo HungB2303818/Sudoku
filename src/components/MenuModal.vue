@@ -2,12 +2,11 @@
   <Teleport to="body">
     <div
       v-if="modelValue"
-      class="fixed inset-0 flex items-center justify-center z-[9999] px-4"
-      style="background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px)"
+      class="fixed inset-0 bg-[#0a0f1e]/80 backdrop-blur-md flex items-center justify-center z-[9999] p-4"
       @click.self="close"
     >
       <div
-        class="relative w-full max-w-[350px] bg-[#1a161f] rounded-[16px] p-8 shadow-2xl border border-white/5"
+        class="relative w-full max-w-[350px] bg-[#161b33] border border-white/10 rounded-[2rem] p-6 shadow-2xl"
       >
         <button
           @click="close"
@@ -30,62 +29,98 @@
         </button>
 
         <div class="text-center mb-8">
-          <p class="text-white font-bold text-lg mt-3">
-            CHỌN ĐỘ KHÓ
-          </p>
+          <p class="text-white font-bold text-lg mt-3">CHỌN ĐỘ KHÓ</p>
         </div>
 
         <div class="space-y-3">
           <button
             @click="handleClick('easy')"
             :class="[
-              'w-full flex items-center gap-4 p-4 rounded-[24px] transition-all duration-300 border',
+              'w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300',
+              'border border-white/10 bg-gradient-to-br from-white/5 to-white/0',
+              'hover:bg-white/10 hover:border-indigo-400/40',
+              'hover:shadow-[0_0_20px_rgba(99,102,241,0.35)]',
+              'hover:scale-[1.02] active:scale-[0.98]',
             ]"
           >
+            <!-- ICON -->
             <div
-              class="w-12 h-12 rounded-full bg-[#2d1b4d] flex items-center justify-center text-[#b19eff]"
+              class="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-yellow-400/20 to-yellow-500/10 border border-yellow-300/30 shadow-[inset_0_0_10px_rgba(255,215,0,0.25)]"
             >
-              <span class="text-xl">★</span>
+              <span
+                class="text-xl text-yellow-300 drop-shadow-[0_0_6px_rgba(255,215,0,0.8)]"
+              >
+                ★
+              </span>
             </div>
+
+            <!-- TEXT -->
             <div class="text-left flex-1">
-              <p class="font-bold text-white text-base">Easy</p>
-              <p class="text-xs text-white/40">For a relaxing mental flow.</p>
+              <p class="font-semibold text-white text-base tracking-wide">
+                Easy
+              </p>
+              <p class="text-xs text-white/50">Nhiều gợi ý - ít ô trống</p>
             </div>
           </button>
 
           <button
             @click="handleClick('medium')"
             :class="[
-              'w-full flex items-center gap-4 p-4 rounded-[24px] transition-all duration-300 border',
+              'w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300',
+              'border border-white/10 bg-gradient-to-br from-white/5 to-white/0',
+              'hover:bg-white/10 hover:border-indigo-400/40',
+              'hover:shadow-[0_0_20px_rgba(99,102,241,0.35)]',
+              'hover:scale-[1.02] active:scale-[0.98]',
             ]"
           >
+            <!-- ICON -->
             <div
-              class="w-12 h-12 rounded-full bg-white/5 flex flex-col items-center justify-center gap-0.5 text-[10px] text-white/60"
+              class="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-yellow-400/20 to-yellow-500/10 border border-yellow-300/30 shadow-[inset_0_0_10px_rgba(255,215,0,0.25)]"
             >
-              <span>★</span>
-              <div class="flex gap-1 -mt-0.5"><span>★</span><span>★</span></div>
+              <span
+                class="text-lg text-yellow-300 drop-shadow-[0_0_6px_rgba(255,215,0,0.8)]"
+              >
+                ★★
+              </span>
             </div>
+
+            <!-- TEXT -->
             <div class="text-left flex-1">
-              <p class="font-bold text-white text-base">Medium</p>
-              <p class="text-xs text-white/40">A balanced challenge.</p>
+              <p class="font-semibold text-white text-base tracking-wide">
+                Medium
+              </p>
+              <p class="text-xs text-white/50">Cân bằng - thử thách vừa phải</p>
             </div>
           </button>
 
           <button
             @click="handleClick('hard')"
             :class="[
-              'w-full flex items-center gap-4 p-4 rounded-[24px] transition-all duration-300 border',
+              'w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300',
+              'border border-white/10 bg-gradient-to-br from-white/5 to-white/0',
+              'hover:bg-white/10 hover:border-indigo-400/40',
+              'hover:shadow-[0_0_20px_rgba(99,102,241,0.35)]',
+              'hover:scale-[1.02] active:scale-[0.98]',
             ]"
           >
+            <!-- ICON -->
             <div
-              class="w-12 h-12 rounded-full bg-white/5 flex flex-col items-center justify-center gap-0.5 text-[9px] text-white/40"
+              class="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-yellow-400/20 to-yellow-500/10 border border-yellow-300/30 shadow-[inset_0_0_10px_rgba(255,215,0,0.25)]"
             >
-              <span>★</span>
-              <div class="flex gap-1 -mt-0.5"><span>★</span><span>★</span></div>
+              <div class="flex flex-col items-center leading-none text-lg text-yellow-300 drop-shadow-[0_0_6px_rgba(255,215,0,0.8)]">
+                <span>★</span>
+                <div class="flex gap-1 -mt-1">
+                  <span v-for="i in 2" :key="i">★</span>
+                </div>
+              </div>
             </div>
+
+            <!-- TEXT -->
             <div class="text-left flex-1">
-              <p class="font-bold text-white text-base">Hard</p>
-              <p class="text-xs text-white/40">Intense logical patterns.</p>
+              <p class="font-semibold text-white text-base tracking-wide">
+                Hard
+              </p>
+              <p class="text-xs text-white/50">Đề bài phức tạp - ít gợi ý</p>
             </div>
           </button>
         </div>
@@ -105,6 +140,4 @@ const handleClick = (level) => {
   emit("handleStartGame", level);
 };
 const close = () => emit("update:modelValue", false);
-
-
 </script>
