@@ -145,7 +145,7 @@
 
       <WinModal v-model:showWin="showWinModal" />
       <ConfirmModal
-        :is-open="showSolveModal"
+        :is-open="showSolveModal && !store.isCompleted"
         @cancel="showSolveModal = false"
         @confirm="handleSolveConfirmed"
       />
