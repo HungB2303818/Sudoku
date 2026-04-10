@@ -6,7 +6,7 @@
       @click.self="close"
     >
       <div
-        class="relative w-full max-w-md bg-[#161b33] border border-white/10 rounded-[2rem] p-6 shadow-2xl"
+        class="relative w-full max-w-md bg-[#161b33] border border-white/10 rounded-3xl p-6 shadow-2xl"
       >
         <button
           @click="close"
@@ -102,9 +102,9 @@
             </div>
 
             <div class="space-y-2 w-32">
-              <Bar label="E" color="bg-green-500" :value="30" />
-              <Bar label="M" color="bg-yellow-400" :value="60" />
-              <Bar label="H" color="bg-orange-500" :value="90" />
+              <Bar label="E" color="bg-green-500" :value="hintDistribution.easy" />
+              <Bar label="M" color="bg-yellow-400" :value="hintDistribution.medium" />
+              <Bar label="H" color="bg-orange-500" :value="hintDistribution.hard" />
             </div>
           </div>
 
@@ -267,7 +267,7 @@ const winRate = computed(() => {
   if (!store.totalGame) return 0;
   return Math.round((store.totalWin / store.totalGame) * 100);
 });
-// Cấu hình UI cho các cấp độ (không chứa dữ liệu logic)
+// Cấu hình UI cho các cấp độ
 const difficultyLevels = [
   {
     key: "easy",
@@ -321,4 +321,18 @@ function formatTime(seconds) {
   const s = seconds % 60;
   return [h, m, s].map((v) => v.toString().padStart(2, "0")).join(":");
 }
+
+const avgHintsPerGame = computed(() => {
+  if (store.totalGame === 0) return 0;
+  return (store.totalHint / store.totalGame).toFixed(1);
+});
+
+const hintDistribution = computed(() => {
+  const total = store.totalHint || 1; // Tránh chia cho 0
+  return {
+    easy: Math.round((store.stats.easy.totalHint / total) * 100),
+    medium: Math.round((store.stats.medium.totalHint / total) * 100),
+    hard: Math.round((store.stats.hard.totalHint / total) * 100)
+  };
+});
 </script>

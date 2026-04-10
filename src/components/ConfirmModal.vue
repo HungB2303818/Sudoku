@@ -3,30 +3,21 @@
     <Transition name="modal-fade">
       <div
         v-if="isOpen"
-        class="fixed inset-0 bg-[#0c0f1a] flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-[#0a0f1e]/80 backdrop-blur-md flex items-center justify-center z-[9999] p-4"
         @click.self="$emit('cancel')"
       >
         <div
-          class="bg-[#1a1a2e] border border-[#3a3a5c]/50 rounded-xl p-8 max-w-sm w-full text-center relative overflow-hidden"
+          class="bg-[#161b33] border border-[#3a3a5c]/50 rounded-xl p-8 max-w-sm w-full text-center relative overflow-hidden"
         >
-
-          <!-- Warning icon -->
           <div
             class="w-14 h-14 mx-auto mb-5 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center"
           >
             <AlertTriangle class="text-red-400" :size="26" />
           </div>
 
-          <!-- Label -->
-          <p
-            class="text-[11px] tracking-[2px] text-red-400 uppercase font-medium mb-2"
-          >
-            Cảnh báo
-          </p>
-
           <!-- Title -->
           <h2 class="text-lg font-medium text-slate-100 mb-3 leading-snug">
-            Giải tự động câu đố?
+            Giải câu đố?
           </h2>
 
           <!-- Description -->
@@ -51,16 +42,16 @@
           <!-- Buttons -->
           <div class="flex gap-2.5">
             <button
-              class="flex-1 py-2.5 rounded-lg border border-[#3a3a5c] text-slate-400 text-sm hover:bg-white/5 hover:border-[#5a5a7c] hover:text-slate-200 transition-all"
-              @click="$emit('cancel')"
-            >
-              Huỷ bỏ
-            </button>
-            <button
               class="flex-1 py-2.5 rounded-lg bg-red-800 text-red-100 text-sm font-medium hover:bg-red-900 active:scale-[0.97] transition-all"
               @click="$emit('confirm')"
             >
               Xác nhận thua
+            </button>
+            <button
+              class="flex-1 py-2.5 rounded-lg border border-[#3a3a5c] text-slate-400 text-sm hover:bg-white/5 hover:border-[#5a5a7c] hover:text-slate-200 transition-all"
+              @click="$emit('cancel')"
+            >
+              Huỷ bỏ
             </button>
           </div>
         </div>
@@ -70,19 +61,19 @@
 </template>
 
 <script setup>
-  import { AlertTriangle, Info } from "lucide-vue-next";
+import { AlertTriangle, Info } from "lucide-vue-next";
 
-  defineProps({ isOpen: Boolean });
-  defineEmits(["cancel", "confirm"]);
+defineProps({ isOpen: Boolean });
+defineEmits(["cancel", "confirm"]);
 </script>
 
 <style scoped>
-  .modal-fade-enter-active,
-  .modal-fade-leave-active {
-    transition: opacity 0.2s ease;
-  }
-  .modal-fade-enter-from,
-  .modal-fade-leave-to {
-    opacity: 0;
-  }
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
 </style>

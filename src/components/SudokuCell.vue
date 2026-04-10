@@ -7,9 +7,9 @@
         ? 'bg-[#050c1a] text-slate-400' // số đề bài
         : 'bg-[#030a17] text-cyan-300', // số người chơi
 
-      isSelected ? 'bg-blue-500/15 z-10 transition-all duration-200' : '',
+      isSelected ? 'bg-blue-500/30 z-10 transition-all duration-200' : '',
 
-      isRelated ? 'bg-blue-400/10' : '',
+      isRelated ? 'bg-blue-400/5' : '',
 
       isError
         ? 'bg-red-900/20 text-red-400/90 transition-all duration-200'

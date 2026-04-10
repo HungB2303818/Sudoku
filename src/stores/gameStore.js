@@ -224,7 +224,7 @@ export const useGameStore = defineStore("game", {
         }
       }
     },
-    //Helper
+    //helper
     removeNote(row, col, value) {
       this.notes[row][col] = this.notes[row][col].filter((v) => v !== value);
     },
