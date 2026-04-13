@@ -143,11 +143,10 @@ export const useGameStore = defineStore("game", {
     },
 
     autoSolve() {
-      const solved = solveBoard(this.gameGrid);
-
-      if (solved) {
+      
+      if (this.solution) {
         this.isSolvedBySystem = true;
-        this.gameGrid = solved;
+        this.gameGrid = this.solution.map((row) => [...row]);
         this.isValidBoard = true;
         this.isCompleted = true;
         return { type: "STOP_TIMER" };
