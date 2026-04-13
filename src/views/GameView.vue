@@ -242,7 +242,10 @@ const inputNumber = (num) => {
 };
 function handleSolveConfirmed() {
   showSolveModal.value = false;
+  store.isSolvedBySystem = true;
   store.autoSolve();
-  // store.recordWin(time.elapsedSeconds, store.hintCount);
+  // console.log("solved by System: ", store.isSolvedBySystem);
+  // console.log("is completed: ", store.isCompleted);
+  store.recordWin(time.elapsedSeconds, store.hintCount);
 }
 </script>

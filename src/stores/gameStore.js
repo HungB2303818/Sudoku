@@ -114,7 +114,7 @@ export const useGameStore = defineStore("game", {
       this.lastHint = null;
 
       this.maxHints = game.maxHints;
-
+      this.isSolvedBySystem = false;
       return { type: "START_GAME" };
     },
 
@@ -171,12 +171,11 @@ export const useGameStore = defineStore("game", {
       const s = this.stats[this.difficulty];
       if (!this.isSolvedBySystem) {
         s.totalWin++;
-        s.totalTime += timeSpent;
-        s.totalHint += hintsUsed;
       }
+      s.totalTime += timeSpent;
+      s.totalHint += hintsUsed;
       this.isCompleted = true;
-      this.isSolvedBySystem = false;
-      console.log(`Đã lưu kỷ lục: ${this.difficulty}`, s);
+      // this.isSolvedBySystem = false;
     },
     resetStats() {
       Object.keys(this.stats).forEach((key) => {

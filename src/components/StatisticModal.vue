@@ -102,9 +102,21 @@
             </div>
 
             <div class="space-y-2 w-32">
-              <Bar label="E" color="bg-green-500" :value="hintDistribution.easy" />
-              <Bar label="M" color="bg-yellow-400" :value="hintDistribution.medium" />
-              <Bar label="H" color="bg-orange-500" :value="hintDistribution.hard" />
+              <Bar
+                label="E"
+                color="bg-green-500"
+                :value="hintDistribution.easy"
+              />
+              <Bar
+                label="M"
+                color="bg-yellow-400"
+                :value="hintDistribution.medium"
+              />
+              <Bar
+                label="H"
+                color="bg-orange-500"
+                :value="hintDistribution.hard"
+              />
             </div>
           </div>
 
@@ -139,7 +151,8 @@
             class="bg-[#1f2644]/40 border rounded-[2rem] p-5 relative overflow-hidden transition-all duration-300 hover:bg-[#1f2644]/60 shadow-xl"
             :style="{
               background: level.background,
-              borderColor: `rgba(${level.rgb}, 0.2)` }"
+              borderColor: `rgba(${level.rgb}, 0.2)`,
+            }"
           >
             <div class="flex justify-between items-center mb-6">
               <div class="flex items-center gap-3">
@@ -223,7 +236,11 @@
               >
                 <div
                   class="h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_12px]"
-                  :class="[level.colorClass, level.shadowClass, level.textClass]"
+                  :class="[
+                    level.colorClass,
+                    level.shadowClass,
+                    level.textClass,
+                  ]"
                   :style="{ width: `${getLevelWinRate(level.key)}%` }"
                 ></div>
               </div>
@@ -272,7 +289,8 @@ const difficultyLevels = [
   {
     key: "easy",
     label: "Easy",
-    background: "linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.15) 100%)",
+    background:
+      "linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.15) 100%)",
     colorClass: "bg-emerald-500",
     shadowClass: "shadow-emerald-500/80",
     textClass: "text-emerald-400",
@@ -281,7 +299,8 @@ const difficultyLevels = [
   {
     key: "medium",
     label: "Medium",
-    background: "linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(120, 53, 15, 0.15) 100%)",
+    background:
+      "linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(120, 53, 15, 0.15) 100%)",
     colorClass: "bg-amber-500",
     shadowClass: "shadow-amber-500/80",
     textClass: "text-amber-400",
@@ -290,7 +309,8 @@ const difficultyLevels = [
   {
     key: "hard",
     label: "Hard",
-    background: "linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(127, 29, 29, 0.15) 100%)",
+    background:
+      "linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(127, 29, 29, 0.15) 100%)",
     colorClass: "bg-red-500",
     shadowClass: "shadow-red-500",
     textClass: "text-red-400",
@@ -308,8 +328,8 @@ const getLevelWinRate = (levelKey) => {
 // Hàm tính thời gian trung bình (mm:ss) cho từng cấp độ
 const getLevelAvgTime = (levelKey) => {
   const s = store.stats[levelKey];
-  if (!s.totalWin) return "00:00";
-  const avg = Math.floor(s.totalTime / s.totalWin);
+  if (!s.totalGame) return "00:00";
+  const avg = Math.floor(s.totalTime / s.totalGame);
   const m = Math.floor(avg / 60);
   const s_rem = avg % 60;
   return `${m.toString().padStart(2, "0")}:${s_rem.toString().padStart(2, "0")}`;
@@ -332,7 +352,7 @@ const hintDistribution = computed(() => {
   return {
     easy: Math.round((store.stats.easy.totalHint / total) * 100),
     medium: Math.round((store.stats.medium.totalHint / total) * 100),
-    hard: Math.round((store.stats.hard.totalHint / total) * 100)
+    hard: Math.round((store.stats.hard.totalHint / total) * 100),
   };
 });
 </script>
