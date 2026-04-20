@@ -5,7 +5,8 @@
 input {
   user-select: auto; /* Riêng các ô nhập số thì vẫn cho phép chọn */
 }
-html, body{
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100vw;
@@ -16,7 +17,7 @@ html, body{
   align-items: center;
 }
 
-#app{
+#app {
   width: 100%;
   height: 100%;
   display: flex;
@@ -26,4 +27,6 @@ html, body{
   padding-bottom: 0px;
   box-sizing: border-box;
 }
-
+button {
+  cursor: pointer;
+}
